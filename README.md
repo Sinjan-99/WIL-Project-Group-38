@@ -5,6 +5,7 @@ COSC2669 Case Studies in Data Science — RMIT University, Semester 2 2026
 ## Team
 
 | Student ID | Name | GitHub |
+
 | s4205755 | Sinjan Chakrabarty | @Sinjan-99 |
 | | | |
 | | | |
