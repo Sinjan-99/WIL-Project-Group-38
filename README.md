@@ -1,36 +1,27 @@
-# WIL Group 38
+# WIL Group 38 - Australian Casual Employee Work-Rights RAG Assistant
 
-COSC2669 Case Studies in Data Science — RMIT University, Semester 2 2026
+## Group Information
 
-## Team
+**Group ID:** 38
 
-| Student ID | Name | GitHub |
+## Group Members
+| Student ID | Name | GitHub ID |
+|---|---|---|
+| S4152164 | Aanvita Ajaiy Awte | @Aanvita04 | 
+| S4186051 | Amir Munawar Wangde| @aamir1901| 
+| S4206979 | Kripa Anna Sajan | @kripa-sajan | 
+| S4233261 | Krishi Kamlesh Patel | | 
+| S4222725 | Neha Merin George | @sphinx048 | 
+| S4205755 | Sinjan Chakrabarty | @Sinjan-99 | 
 
-| s4205755 | Sinjan Chakrabarty | @Sinjan-99 |
-| | | |
-| | | |
-| | | |
-| | | |
+## Project Overview
+This projects aims to develop a RAG system that helps casual employees in Australia to quickly find accurate information about their work rights and entitlements. This system is built and evaluated following the Walert methodology.
 
-## Project
+## Current Progress
+- Walert RAG reproduction initiated
 
-Project direction is being finalised. The group is reproducing the Walert
-retrieval-augmented generation pipeline as a baseline before scoping the
-extension.
 
-Reference: 
 
-Pathiyan Cherumanal et al., "Walert: Putting Conversational
-Information Seeking Knowledge into Action by Building and Evaluating a
-Large Language Model-Powered Chatbot", CHIIR '24.
 
-## Repository layout
 
-- `src/` — pipeline code
-- `data/` — testbed and knowledge base
-- `notebooks/` — exploration and analysis
-- `results/` — evaluation outputs
-
-## Links
-
-- Trello board: https://trello.com/invite/b/6a841c8961afef0700ca8655/ATTI09522c6116b0c4e796591af8c555bea5A29CFAEB/wil-38
+  
