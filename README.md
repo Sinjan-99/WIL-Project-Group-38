@@ -10,7 +10,7 @@
 | S4152164 | Aanvita Ajaiy Awte | @Aanvita04 | 
 | S4186051 | Amir Munawar Wangde| @aamir1901| 
 | S4206979 | Kripa Anna Sajan | @kripa-sajan | 
-| S4233261 | Krishi Kamlesh Patel | | 
+| S4233261 | Krishi Kamlesh Patel | @Krishi301 | 
 | S4222725 | Neha Merin George | @sphinx048 | 
 | S4205755 | Sinjan Chakrabarty | @Sinjan-99 | 
 
