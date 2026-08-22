@@ -18,8 +18,20 @@
 This projects aims to develop a RAG system that helps casual employees in Australia to quickly find accurate information about their work rights and entitlements. This system is built and evaluated following the Walert methodology.
 
 ## Current Progress
-- Walert RAG reproduction initiated
+- Walert RAG reproduction completed to the current retreival-evaluation stage
+- Walert BM25 retrieval index generated
+- Known and Inferred evaluations completed
+- Initial Project scope and stakeholder identified
+- Built Trello Board
 
+## Repository Structure
+  
+```text
+data/       # Knowledge Base
+src/        # RAG implementation
+evaluation/ # Evaluation data and results
+frontend/   # User interface
+docs/       # Project documentation
 
 
 
