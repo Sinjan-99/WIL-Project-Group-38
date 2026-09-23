@@ -1,0 +1,7 @@
+streamlit
+sentence-transformers
+torch
+torchvision
+numpy
+requests
+beautifulsoup4
