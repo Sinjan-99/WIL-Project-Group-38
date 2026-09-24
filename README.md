@@ -52,19 +52,24 @@ python -m venv .venv
 ```bash
 .\.venv\Scripts\python.exe -m pip install -r requirements.txt
 ```
-### 4. Install Ollama
+### 4. Rebuild the Knowledge Base
+Before running the application, rebuild the knowledge base from the Fair work source files:
+```bash
+.\.venv\Scripts\python.exe src/build_database.py
+```
+### 5. Install Ollama
 Install Ollama, then download the Llama 3.2 model:
 ```bash
 ollama pull llama3.2
 ```
-### 5. Run the Application
+### 6. Run the Application
 From the project root directory, run:
 ```bash
 .\.venv\Scripts\python.exe -m streamlit run app.py
 ```
 
 ## Knowledge Base
-Processed knowledge base: data/processed/passages.csv
+Processed knowledge base: data/processed/passages.csv  
 Raw Fair Work source pages: data/raw/
 To rebuild the database:
 ```bash
