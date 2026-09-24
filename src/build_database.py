@@ -198,7 +198,8 @@ def clean_text(text, document_id="unknown"):
             lines = lines[:footer_start]
 
     # Join the retained text into a single string.
-    cleaned_text = " ".join(line for line in lines if line)
+    cleaned_text = "\n".join(line for line in lines if line)
+
 
     # Remove the unwanted placeholder.
     cleaned_text = cleaned_text.replace(
@@ -209,32 +210,124 @@ def clean_text(text, document_id="unknown"):
     cleaned_text = re.sub(r"\.{2,}", ".", cleaned_text)
 
     # Normalise whitespace after cleaning.
-    cleaned_text = re.sub(r"\s+", " ", cleaned_text).strip()
+    cleaned_text = "\n".join(
+    re.sub(r"\s+", " ", line).strip()
+    for line in cleaned_text.splitlines()
+    if line.strip()
+)
 
     return cleaned_text
 
 
 # ==================================================
-# 4. CHUNK INTO 250 WORDS WITH 50-WORD OVERLAP
+# 4. PARAGRAPH-AWARE CHUNKING
 # ==================================================
 
 def chunk_text(text):
-
-    words = text.split()
+    paragraphs = [
+        paragraph.strip()
+        for paragraph in text.splitlines()
+        if paragraph.strip()
+    ]
 
     chunks = []
+    current_paragraphs = []
+    current_word_count = 0
 
-    for start in range(0, len(words), STEP):
+    for paragraph in paragraphs:
+        paragraph_words = paragraph.split()
+        paragraph_word_count = len(paragraph_words)
 
-        end = min(start + CHUNK_SIZE, len(words))
+        # If adding this paragraph would exceed the chunk size,
+        # save the current chunk first.
+        if (
+            current_paragraphs
+            and current_word_count + paragraph_word_count > CHUNK_SIZE
+        ):
+            chunks.append("\n".join(current_paragraphs))
 
-        chunk = " ".join(words[start:end])
+            # Keep the last paragraph as overlap when possible.
+            overlap_paragraph = current_paragraphs[-1]
 
-        if chunk:
-            chunks.append(chunk)
+            current_paragraphs = [overlap_paragraph]
+            current_word_count = len(overlap_paragraph.split())
 
-        if end == len(words):
-            break
+        # If a single paragraph is larger than the chunk size,
+        # split it into smaller pieces.
+        if paragraph_word_count > CHUNK_SIZE:
+            words = paragraph_words
+
+            for start in range(0, len(words), STEP):
+                end = min(start + CHUNK_SIZE, len(words))
+
+                chunk = " ".join(words[start:end])
+
+                if chunk:
+                    chunks.append(chunk)
+
+                if end == len(words):
+                    break
+
+            current_paragraphs = []
+            current_word_count = 0
+
+        else:
+            current_paragraphs.append(paragraph)
+            current_word_count += paragraph_word_count
+
+    # Add remaining paragraphs.
+    if current_paragraphs:
+        chunks.append("\n".join(current_paragraphs))
+
+    return chunks
+
+    # The scraper stores paragraphs, headings and list items
+    # on separate lines. Keep those boundaries when chunking.
+    blocks = [
+        block.strip()
+        for block in text.splitlines()
+        if block.strip()
+    ]
+
+    chunks = []
+    current_blocks = []
+    current_word_count = 0
+
+    for block in blocks:
+
+        block_word_count = len(block.split())
+
+        # If adding this block would make the passage too large,
+        # save the current passage first.
+        if (
+            current_blocks
+            and current_word_count + block_word_count > CHUNK_SIZE
+        ):
+            chunks.append("\n\n".join(current_blocks))
+
+            # Keep the last block as contextual overlap.
+            overlap_blocks = []
+            overlap_words = 0
+
+            for previous_block in reversed(current_blocks):
+
+                previous_words = len(previous_block.split())
+
+                if overlap_words + previous_words > OVERLAP:
+                    break
+
+                overlap_blocks.insert(0, previous_block)
+                overlap_words += previous_words
+
+            current_blocks = overlap_blocks
+            current_word_count = overlap_words
+
+        current_blocks.append(block)
+        current_word_count += block_word_count
+
+    # Add the final passage.
+    if current_blocks:
+        chunks.append("\n\n".join(current_blocks))
 
     return chunks
 
