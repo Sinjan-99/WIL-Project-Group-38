@@ -7,29 +7,27 @@ rights in Australia from Fair Work Ombudsman source pages.
 
 Retrieval is dense: passages and questions are encoded with a sentence
 embedding model and compared by cosine similarity. This replaces the BM25
-baseline used in the Milestone 1 reproduction. The reason is in our own
-results - BM25 reached NDCG@1 of 0.5119 on known questions against 0.6905 for
-dense retrieval, and the gap widens on paraphrased questions, which is how
-casual workers actually ask.
+baseline used in the Milestone 1 reproduction, where dense retrieval reached
+NDCG@1 of 0.6905 on known questions against 0.5119 for BM25, with the gap
+widening on paraphrased questions.
 
-The interface loads immediately. The embedding model is only loaded when it is
-first needed, either by asking a question or by pressing Warm up model in the
-sidebar. Use that button before a demo so the wait happens off screen.
+Generation runs locally through Ollama (see src/generation.py). If Ollama is
+not running the app falls back to extractive mode and shows the retrieved
+passage instead of a written answer, so retrieval can still be demonstrated
+and evaluated on its own.
 
 Run:
-    python -m pip install streamlit sentence-transformers numpy
+    python -m pip install -r requirements.txt
+    ollama pull llama3.2
     streamlit run app.py
 
-First use downloads the embedding model (about 90 MB) and needs internet.
-Afterwards it is cached locally and runs offline.
-
 Data files:
-    data/passages.jsonl   {"id", "url", "title", "text"}
-    data/questions.jsonl  {"qid", "question", "gold_ids": [...], "type": "known|inferred|out_of_scope"}
+    data/processed/passages.jsonl   {"id", "url", "title", "text"}
+    data/questions.jsonl            {"qid", "question", "gold_ids": [...], "type": "known|inferred|out_of_scope"}
 """
 
 import json
-import os
+import sys
 from pathlib import Path
 
 import numpy as np
@@ -37,19 +35,22 @@ import streamlit as st
 
 # --------------------------------------------------------------- configuration
 
-MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2"
+EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
 
 TOP_K = 5              # passages retrieved per question
 MIN_SIMILARITY = 0.35  # below this, nothing is relevant enough to answer from
 
-# MIN_SIMILARITY is the one number that decides behaviour. Cosine similarity
-# runs from -1 to 1; in practice a clearly relevant passage sits above 0.5, a
-# loosely related one around 0.3, and an unrelated one near 0. Set this against
-# the out-of-scope questions in data/questions.jsonl and record what you chose.
+# MIN_SIMILARITY is the one retrieval number that decides behaviour. Cosine
+# similarity runs from -1 to 1; in practice a clearly relevant passage sits
+# above 0.5, a loosely related one around 0.3, and an unrelated one near 0.
+# Tune it against the out-of-scope questions and record what you chose.
 
-DATA = Path(__file__).parent / "data"
+ROOT = Path(__file__).parent
+DATA = ROOT / "data"
 PASSAGES = DATA / "processed" / "passages.jsonl"
 QUESTIONS = DATA / "questions.jsonl"
+
+sys.path.insert(0, str(ROOT / "src"))
 
 
 # ----------------------------------------------------------------------- data
@@ -81,7 +82,7 @@ def load_passages():
 @st.cache_resource(show_spinner="Loading the embedding model, one moment...")
 def load_model():
     from sentence_transformers import SentenceTransformer
-    return SentenceTransformer(MODEL_NAME)
+    return SentenceTransformer(EMBEDDING_MODEL)
 
 
 @st.cache_resource(show_spinner="Encoding passages...")
@@ -104,7 +105,7 @@ def build_index():
 # ------------------------------------------------------------------ retrieval
 
 def retrieve(query, k=TOP_K, min_similarity=MIN_SIMILARITY):
-    """Return passages ranked by cosine similarity, above the relevance floor."""
+    """Return (passage, similarity) pairs above the relevance floor, best first."""
     vectors, passages = build_index()
     if vectors is None or not query.strip():
         return []
@@ -126,44 +127,35 @@ def should_abstain(hits):
 
 # ------------------------------------------------------------------ generation
 
-SYSTEM_PROMPT = """You are helping casual employees in Australia understand their
-workplace rights.
-
-Rules:
-- Answer only from the passages provided. Do not use outside knowledge.
-- Cite the source URL for every claim you make.
-- If the passages do not answer the question, say so plainly. Do not guess.
-- Pay rates change on 1 July each year, so tell the user to confirm current
-  figures on the Fair Work website.
-"""
-
-
-def build_prompt(question, hits):
-    context = "\n\n".join(
-        f"[{i + 1}] {p['title']} ({p['url']})\n{p['text']}"
-        for i, (p, _) in enumerate(hits)
-    )
-    return f"{SYSTEM_PROMPT}\n\nPassages:\n{context}\n\nQuestion: {question}\n\nAnswer:"
-
-
 def generate(question, hits):
-    """Return a generated answer, or None to fall back to extractive mode.
+    """Write an answer from the retrieved passages.
 
-    To enable generation, set the key in your environment and fill this in.
-    Keep the key out of the repository.
-
-        from anthropic import Anthropic
-        client = Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
-        msg = client.messages.create(
-            model="claude-sonnet-4-5",
-            max_tokens=700,
-            messages=[{"role": "user", "content": build_prompt(question, hits)}],
-        )
-        return msg.content[0].text
+    Returns None when no answer should be shown, which sends the interface to
+    extractive mode. That happens when Ollama is unreachable, or when the model
+    itself reports that the passages do not answer the question.
     """
-    if not os.environ.get("ANTHROPIC_API_KEY"):
+    if not hits:
         return None
-    return None
+
+    try:
+        from generation import generate_answer, GenerationUnavailable, FALLBACK
+    except ImportError:
+        st.info("Generation module not found - showing retrieved passages.")
+        return None
+
+    try:
+        answer = generate_answer(question, hits)
+    except GenerationUnavailable as error:
+        st.warning(
+            "The local model isn't responding, so I'm showing the retrieved "
+            "passage instead. Check that Ollama is running."
+        )
+        st.caption(f"{error}")
+        return None
+
+    if answer.strip() == FALLBACK:
+        return None
+    return answer
 
 
 # ------------------------------------------------------------------ evaluation
@@ -176,6 +168,11 @@ def ndcg_at_k(ranked_ids, gold_ids, k):
 
 
 def run_evaluation(questions):
+    """Score retrieval on answerable questions and abstention on the rest.
+
+    Retrieval only - generation is not called here, so this runs quickly and
+    measures the stage that sets the ceiling for everything downstream.
+    """
     retrieval_rows, abstention_rows = [], []
     for q in questions:
         hits = retrieve(q["question"])
@@ -209,7 +206,7 @@ with st.sidebar:
         st.success(f"{len(passages)} passages indexed")
     else:
         st.error("No corpus loaded")
-        st.caption("Add data/passages.jsonl, then reload.")
+        st.caption(f"Expected {PASSAGES.relative_to(ROOT)}")
 
     if st.button("Reload corpus"):
         load_passages.clear()
@@ -219,11 +216,22 @@ with st.sidebar:
     if st.button("Warm up model"):
         try:
             build_index()
-            st.success("Ready")
+            st.success("Retrieval ready")
         except ImportError:
             st.error("sentence-transformers is not installed.")
 
-    st.caption(f"Retrieval: dense - {MODEL_NAME.split('/')[-1]}")
+    st.subheader("Generation")
+    try:
+        from generation import is_available, MODEL_NAME
+        if is_available():
+            st.success(f"{MODEL_NAME} ready")
+        else:
+            st.warning("Ollama not reachable")
+            st.caption("Extractive mode: answers show the retrieved passage.")
+    except ImportError:
+        st.warning("Generation module not found")
+
+    st.caption(f"Retrieval: dense - {EMBEDDING_MODEL.split('/')[-1]}")
 
 ask_tab, eval_tab = st.tabs(["Ask", "Evaluation"])
 
@@ -241,12 +249,7 @@ with ask_tab:
         if not passages:
             st.error("No corpus loaded, so nothing can be retrieved.")
         else:
-            try:
-                hits = retrieve(question)
-            except ImportError:
-                st.error("The sentence-transformers package is not installed.")
-                st.code("python -m pip install sentence-transformers", language="bash")
-                st.stop()
+            hits = retrieve(question)
 
             if should_abstain(hits):
                 st.warning(
@@ -255,42 +258,50 @@ with ask_tab:
                     "Fair Work Infoline on 13 13 94."
                 )
             else:
-                answer = generate(question, hits)
+                with st.spinner("Writing an answer..."):
+                    answer = generate(question, hits)
+
                 if answer:
                     st.markdown(answer)
+                    st.subheader("Sources")
+                    for p, score in hits:
+                        with st.expander(f"{p['title']} · similarity {score:.2f}"):
+                            st.write(p["text"])
+                            st.caption(p["url"])
                 else:
                     top, score = hits[0]
                     st.markdown(f"**{top['title']}**")
                     st.write(top["text"])
                     st.caption(f"Source: {top['url']}")
 
-                if len(hits) > 1:
-                    st.subheader("Other passages retrieved")
-                    for p, score in hits[1:]:
-                        with st.expander(f"{p['title']} · similarity {score:.2f}"):
-                            st.write(p["text"])
-                            st.caption(p["url"])
+                    if len(hits) > 1:
+                        st.subheader("Other passages retrieved")
+                        for p, score in hits[1:]:
+                            with st.expander(f"{p['title']} · similarity {score:.2f}"):
+                                st.write(p["text"])
+                                st.caption(p["url"])
 
 with eval_tab:
     st.title("Evaluation")
     questions = load_jsonl(QUESTIONS)
 
     if not questions:
-        st.info("Add data/questions.jsonl to run the evaluation.")
+        st.info(f"Add {QUESTIONS.relative_to(ROOT)} to run the evaluation.")
         st.caption("One JSON object per line:")
         st.code(
             '{"qid": "q1", "question": "What is casual loading?", '
-            '"gold_ids": ["fwo_001_001"], "type": "known"}\n'
+            '"gold_ids": ["fwo_001_0000"], "type": "known"}\n'
             '{"qid": "q2", "question": "Why is my hourly rate higher than my '
-            'friend\'s?", "gold_ids": ["fwo_001_001"], "type": "inferred"}\n'
+            'friend\'s?", "gold_ids": ["fwo_001_0000"], "type": "inferred"}\n'
             '{"qid": "q3", "question": "How much is stamp duty in Victoria?", '
             '"gold_ids": [], "type": "out_of_scope"}',
             language="json",
         )
     else:
-        st.caption(f"{len(questions)} questions loaded.")
+        st.caption(f"{len(questions)} questions loaded. Retrieval only - generation is not called here.")
         if st.button("Run evaluation"):
-            retrieval_rows, abstention_rows = run_evaluation(questions)
+            with st.spinner("Scoring..."):
+                retrieval_rows, abstention_rows = run_evaluation(questions)
 
             for qtype in ("known", "inferred", "unspecified"):
                 subset = [r for r in retrieval_rows if r["type"] == qtype]
