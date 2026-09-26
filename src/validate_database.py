@@ -1,20 +1,24 @@
-
+import csv
 import json
+import re
 from collections import defaultdict
 
 from build_database import (
     PASSAGES_JSONL,
-    CHUNK_SIZE,
-    OVERLAP,
+    COLLECTION_CSV,
     FIELDS,
+    MAX_PASSAGE_WORDS,
+    FAST_FOOD_MAX_WORDS,
     load_pages,
     clean_text,
-    chunk_text,
+    create_passages,
+    create_fast_food_passages,
+    normalise,
 )
 
 
 # ==================================================
-# 1. LOAD THE GENERATED DATABASE
+# 1. LOAD GENERATED PASSAGES
 # ==================================================
 
 def load_passages():
@@ -27,29 +31,43 @@ def load_passages():
     records = []
 
     with PASSAGES_JSONL.open(
-        "r", encoding="utf-8"
+        "r",
+        encoding="utf-8",
     ) as file:
 
-        for line_number, line in enumerate(file, 1):
+        for line_number, line in enumerate(
+            file,
+            1,
+        ):
 
             if not line.strip():
                 continue
 
             try:
-                record = json.loads(line)
+                record = json.loads(
+                    line
+                )
 
             except json.JSONDecodeError as error:
+
                 raise ValueError(
-                    f"Invalid JSON on line {line_number}"
+                    f"Invalid JSON on line "
+                    f"{line_number}"
                 ) from error
 
-            if not isinstance(record, dict):
+            if not isinstance(
+                record,
+                dict,
+            ):
+
                 raise ValueError(
                     f"Line {line_number} is not "
                     f"a JSON object."
                 )
 
-            records.append(record)
+            records.append(
+                record
+            )
 
     if not records:
         raise ValueError(
@@ -60,256 +78,727 @@ def load_passages():
 
 
 # ==================================================
-# 2. VALIDATE THE DATABASE
+# 2. LOAD COLLECTION.CSV
+# ==================================================
+
+def load_collection():
+
+    if not COLLECTION_CSV.exists():
+
+        raise FileNotFoundError(
+            f"Collection not found: "
+            f"{COLLECTION_CSV}"
+        )
+
+    with COLLECTION_CSV.open(
+        "r",
+        encoding="utf-8",
+        newline="",
+    ) as file:
+
+        reader = csv.DictReader(
+            file
+        )
+
+        expected_fields = [
+            "passage_id",
+            "passage",
+        ]
+
+        if (
+            reader.fieldnames
+            != expected_fields
+        ):
+
+            raise ValueError(
+                "Collection.csv must contain "
+                "exactly: passage_id, passage"
+            )
+
+        rows = list(
+            reader
+        )
+
+    if not rows:
+        raise ValueError(
+            "Collection.csv is empty."
+        )
+
+    return rows
+
+
+# ==================================================
+# 3. VALIDATE DATABASE
 # ==================================================
 
 def validate_database():
 
     pages = load_pages()
     records = load_passages()
+    collection = load_collection()
 
     source_by_id = {
-        page["id"].strip(): page
+        page["id"].strip():
+            page
         for page in pages
     }
 
     if len(source_by_id) != len(pages):
+
         raise ValueError(
-            "Duplicate source document IDs."
+            "Duplicate source document IDs "
+            "exist in raw_pages.jsonl."
         )
 
-    seen_ids = set()
-    grouped = defaultdict(list)
+    seen_passage_ids = set()
+
+    grouped = defaultdict(
+        list
+    )
+
+    warnings = []
+
+    # ==================================================
+    # 4. VALIDATE EACH PASSAGE
+    # ==================================================
 
     for record in records:
 
         # ------------------------------------------
-        # Check required schema fields.
+        # Schema
         # ------------------------------------------
 
-        assert set(record.keys()) == set(FIELDS), (
-            f"Invalid schema: {record}"
+        assert (
+            set(record.keys())
+            == set(FIELDS)
+        ), (
+            "Invalid passage schema for "
+            f"record: {record}"
         )
 
-        passage_id = record["id"]
-        document_id = record["document_id"]
+        passage_id = (
+            record["passage_id"]
+        )
+
+        source_id = (
+            record["source_id"]
+        )
+
+        passage = (
+            record["passage"]
+        )
+
+        # ------------------------------------------
+        # String fields
+        # ------------------------------------------
 
         for field in [
-            "id",
-            "document_id",
+            "passage_id",
+            "source_id",
             "title",
             "url",
-            "text",
+            "passage",
             "scraped_on",
         ]:
 
-            assert isinstance(record[field], str), (
-                f"Invalid {field}: {passage_id}"
+            assert isinstance(
+                record[field],
+                str,
+            ), (
+                f"Invalid {field}: "
+                f"{passage_id}"
             )
 
-            assert record[field].strip(), (
-                f"Empty {field}: {passage_id}"
+            assert (
+                record[field].strip()
+            ), (
+                f"Empty {field}: "
+                f"{passage_id}"
             )
 
         # ------------------------------------------
-        # Check unique passage IDs.
+        # Passage ID
         # ------------------------------------------
 
-        assert passage_id not in seen_ids, (
-            f"Duplicate passage ID: {passage_id}"
+        assert re.fullmatch(
+            r"P\d{4,}",
+            passage_id,
+        ), (
+            f"Invalid passage ID format: "
+            f"{passage_id}"
         )
 
-        seen_ids.add(passage_id)
+        assert (
+            passage_id
+            not in seen_passage_ids
+        ), (
+            f"Duplicate passage ID: "
+            f"{passage_id}"
+        )
+
+        seen_passage_ids.add(
+            passage_id
+        )
 
         # ------------------------------------------
-        # Check chunk index and word count.
+        # passage_index
         # ------------------------------------------
 
-        assert type(record["chunk_index"]) is int
-        assert record["chunk_index"] >= 0
+        assert (
+            type(
+                record["passage_index"]
+            )
+            is int
+        ), (
+            f"Invalid passage_index: "
+            f"{passage_id}"
+        )
 
-        assert type(record["word_count"]) is int
+        assert (
+            record["passage_index"]
+            >= 0
+        ), (
+            f"Negative passage_index: "
+            f"{passage_id}"
+        )
+
+        # ------------------------------------------
+        # word_count
+        # ------------------------------------------
+
+        assert (
+            type(
+                record["word_count"]
+            )
+            is int
+        ), (
+            f"Invalid word_count: "
+            f"{passage_id}"
+        )
 
         actual_word_count = len(
-            record["text"].split()
+            passage.split()
         )
 
         assert (
-            record["word_count"] == actual_word_count
+            record["word_count"]
+            == actual_word_count
         ), (
-            f"Incorrect word count: {passage_id}"
-        )
-
-        assert 0 < actual_word_count <= CHUNK_SIZE, (
-            f"Invalid passage length: {passage_id}"
-        )
-
-        # ------------------------------------------
-        # Check stable passage ID format.
-        # ------------------------------------------
-
-        expected_id = (
-            f"{document_id}_"
-            f"{record['chunk_index']:04d}"
-        )
-
-        assert passage_id == expected_id, (
-            f"Incorrect passage ID: {passage_id}"
-        )
-
-        # ------------------------------------------
-        # Check source metadata.
-        # ------------------------------------------
-
-        assert document_id in source_by_id, (
-            f"Unknown source document: {document_id}"
-        )
-
-        source = source_by_id[document_id]
-
-        assert (
-            record["url"] == source["url"].strip()
-        ), (
-            f"Incorrect source URL: {passage_id}"
+            f"Incorrect word count: "
+            f"{passage_id}"
         )
 
         assert (
-            record["title"] == source["title"].strip()
+            actual_word_count > 0
         ), (
-            f"Incorrect source title: {passage_id}"
+            f"Empty passage: "
+            f"{passage_id}"
+        )
+
+        # fwo_015 intentionally uses the larger
+        # table-aware passage limit.
+        if source_id == "fwo_015":
+
+            allowed_max = (
+                FAST_FOOD_MAX_WORDS
+            )
+
+        else:
+
+            allowed_max = (
+                MAX_PASSAGE_WORDS
+            )
+
+        if (
+            actual_word_count
+            > allowed_max
+        ):
+
+            warnings.append(
+                f"{passage_id}: "
+                f"{actual_word_count} words "
+                f"(above {allowed_max})"
+            )
+
+        # ------------------------------------------
+        # Source exists
+        # ------------------------------------------
+
+        assert (
+            source_id
+            in source_by_id
+        ), (
+            f"Unknown source: "
+            f"{source_id}"
+        )
+
+        source = (
+            source_by_id[source_id]
+        )
+
+        # ------------------------------------------
+        # Source metadata
+        # ------------------------------------------
+
+        assert (
+            record["title"]
+            == source[
+                "title"
+            ].strip()
+        ), (
+            f"Incorrect title: "
+            f"{passage_id}"
+        )
+
+        assert (
+            record["url"]
+            == source[
+                "url"
+            ].strip()
+        ), (
+            f"Incorrect URL: "
+            f"{passage_id}"
         )
 
         assert (
             record["scraped_on"]
-            == source["scraped_on"].strip()
+            == source[
+                "scraped_on"
+            ].strip()
         ), (
-            f"Incorrect scraping date: {passage_id}"
+            f"Incorrect scraped_on: "
+            f"{passage_id}"
         )
 
         # ------------------------------------------
-        # Reconstruct the expected source chunk.
+        # Obvious webpage artefacts
         # ------------------------------------------
 
-        expected_chunks = chunk_text(
-            clean_text(
-                source["text"],
-                document_id=document_id
+        forbidden_artifacts = [
+            "On this page:",
+            "Industry Embedded Filter Placeholder",
+            "Tools and resources",
+        ]
+
+        for artifact in (
+            forbidden_artifacts
+        ):
+
+            assert (
+                artifact
+                not in passage
+            ), (
+                f"Webpage artefact "
+                f"'{artifact}' found in "
+                f"{passage_id}"
+            )
+
+        # ------------------------------------------
+        # Encoding artefacts
+        # ------------------------------------------
+
+        encoding_artifacts = [
+            "â€™",
+            "â€˜",
+            "â€œ",
+            "â€",
+            "Â ",
+        ]
+
+        for artifact in (
+            encoding_artifacts
+        ):
+
+            assert (
+                artifact
+                not in passage
+            ), (
+                f"Encoding artefact "
+                f"'{artifact}' found in "
+                f"{passage_id}"
+            )
+
+        # ------------------------------------------
+        # Example heading must not be stranded
+        # ------------------------------------------
+
+        lines = [
+            line.strip()
+            for line
+            in passage.splitlines()
+            if line.strip()
+        ]
+
+        if lines:
+
+            assert not (
+                lines[-1].startswith(
+                    "Example:"
+                )
+            ), (
+                "Example heading without "
+                f"example text: {passage_id}"
+            )
+
+        grouped[
+            source_id
+        ].append(
+            record
+        )
+
+    # ==================================================
+    # 5. ALL SOURCES REPRESENTED
+    # ==================================================
+
+    missing_sources = (
+        set(source_by_id)
+        - set(grouped)
+    )
+
+    if missing_sources:
+
+        raise ValueError(
+            "No passages generated for: "
+            + ", ".join(
+                sorted(
+                    missing_sources
+                )
             )
         )
 
-        index = record["chunk_index"]
-
-        assert index < len(expected_chunks), (
-            f"Invalid chunk index: {passage_id}"
-        )
-
-        assert (
-            record["text"] == expected_chunks[index]
-        ), (
-            f"Passage text does not match "
-            f"the source: {passage_id}"
-        )
-
-        grouped[document_id].append(record)
-
     # ==================================================
-    # 3. CHECK THAT ALL WEBPAGES ARE REPRESENTED
+    # 6. PASSAGE INDEX ORDER PER SOURCE
     # ==================================================
 
-    missing_documents = (
-        set(source_by_id) - set(grouped)
-    )
+    for (
+        source_id,
+        source_records,
+    ) in grouped.items():
 
-    if missing_documents:
-        raise ValueError(
-            "No passages generated for these "
-            "source documents: "
-            + ", ".join(sorted(missing_documents))
+        source_records.sort(
+            key=lambda record:
+                record[
+                    "passage_index"
+                ]
         )
 
-    # ==================================================
-    # 4. CHECK CHUNK ORDER AND 50-WORD OVERLAP
-    # ==================================================
-
-    checked_pairs = 0
-
-    for document_id, passages in grouped.items():
-
-        passages.sort(
-            key=lambda record: record["chunk_index"]
-        )
-
-        # Every source chunk should be present because
-        # the builder does not automatically remove
-        # duplicate passages.
         actual_indices = [
-            record["chunk_index"]
-            for record in passages
+            record[
+                "passage_index"
+            ]
+            for record
+            in source_records
         ]
 
         expected_indices = list(
-            range(len(passages))
+            range(
+                len(
+                    source_records
+                )
+            )
         )
 
-        assert actual_indices == expected_indices, (
-            f"Missing or incorrectly ordered chunks "
-            f"for {document_id}"
+        assert (
+            actual_indices
+            == expected_indices
+        ), (
+            "Incorrect passage_index "
+            f"sequence for {source_id}. "
+            f"Got {actual_indices}"
         )
 
-        for first, second in zip(
-            passages,
-            passages[1:]
+    # ==================================================
+    # 7. GLOBAL PASSAGE ID SEQUENCE
+    # ==================================================
+
+    expected_ids = [
+        f"P{number:04d}"
+        for number in range(
+            1,
+            len(records) + 1,
+        )
+    ]
+
+    actual_ids = [
+        record["passage_id"]
+        for record in records
+    ]
+
+    assert (
+        actual_ids
+        == expected_ids
+    ), (
+        "Passage IDs are not sequential "
+        "from P0001 onwards."
+    )
+
+    # ==================================================
+    # 8. RECONSTRUCT PASSAGES FROM RAW SOURCES
+    # ==================================================
+
+    for (
+        source_id,
+        source_records,
+    ) in grouped.items():
+
+        source = (
+            source_by_id[source_id]
+        )
+
+        cleaned = clean_text(
+            source["text"],
+            document_id=source_id,
+        )
+
+        # Reproduce exactly the same construction
+        # decision as build_database.py.
+        if source_id == "fwo_015":
+
+            expected_passages = (
+                create_fast_food_passages(
+                    cleaned
+                )
+            )
+
+        else:
+
+            expected_passages = (
+                create_passages(
+                    cleaned
+                )
+            )
+
+        # Same-source exact duplicate removal,
+        # matching build_database.py.
+        unique_expected = []
+        seen_texts = set()
+
+        for passage in (
+            expected_passages
         ):
 
-            first_words = first["text"].split()
-            second_words = second["text"].split()
-
-            overlap_length = min(
-                OVERLAP,
-                len(second_words)
+            key = normalise(
+                passage
             )
 
-            assert (
-                first_words[-overlap_length:]
-                == second_words[:overlap_length]
-            ), (
-                "Incorrect overlap between "
-                f"{first['id']} and {second['id']}"
+            if key in seen_texts:
+                continue
+
+            seen_texts.add(
+                key
             )
 
-            checked_pairs += 1
+            unique_expected.append(
+                passage
+            )
+
+        source_records.sort(
+            key=lambda record:
+                record[
+                    "passage_index"
+                ]
+        )
+
+        actual_passages = [
+            record["passage"]
+            for record
+            in source_records
+        ]
+
+        assert (
+            actual_passages
+            == unique_expected
+        ), (
+            "Generated passages do not "
+            "match reconstructed source "
+            f"passages for {source_id}"
+        )
 
     # ==================================================
-    # 5. PRINT VALIDATION RESULTS
+    # 9. EXACT SAME-SOURCE DUPLICATE CHECK
     # ==================================================
 
-    print("\nDATABASE VALIDATION RESULTS")
-    print("---------------------------")
+    seen_texts = {}
+
+    for record in records:
+
+        key = (
+            record["source_id"],
+            normalise(
+                record["passage"]
+            ),
+        )
+
+        assert (
+            key not in seen_texts
+        ), (
+            "Exact same-source duplicate: "
+            f"{seen_texts[key]} and "
+            f"{record['passage_id']}"
+        )
+
+        seen_texts[key] = (
+            record["passage_id"]
+        )
+
+    # ==================================================
+    # 10. COLLECTION.CSV MUST MATCH JSONL
+    # ==================================================
+
+    assert (
+        len(collection)
+        == len(records)
+    ), (
+        "Collection.csv and "
+        "passages.jsonl have different "
+        "numbers of passages."
+    )
+
+    for record, row in zip(
+        records,
+        collection,
+    ):
+
+        assert (
+            row["passage_id"]
+            == record["passage_id"]
+        ), (
+            "Collection passage ID "
+            f"mismatch: "
+            f"{record['passage_id']}"
+        )
+
+        assert (
+            row["passage"]
+            == record["passage"]
+        ), (
+            "Collection passage text "
+            f"mismatch: "
+            f"{record['passage_id']}"
+        )
+
+    # ==================================================
+    # 11. CHECK COLLECTION IDS UNIQUE
+    # ==================================================
+
+    collection_ids = [
+        row["passage_id"]
+        for row in collection
+    ]
+
+    assert (
+        len(collection_ids)
+        == len(
+            set(collection_ids)
+        )
+    ), (
+        "Duplicate passage IDs found "
+        "in Collection.csv."
+    )
+
+    # ==================================================
+    # 12. PRINT RESULTS
+    # ==================================================
+
+    print()
+    print(
+        "DATABASE VALIDATION RESULTS"
+    )
+
+    print(
+        "---------------------------"
+    )
 
     print("Schema: PASSED")
+    print("Passage ID format: PASSED")
     print("Unique passage IDs: PASSED")
+    print("Sequential passage IDs: PASSED")
     print("Word counts: PASSED")
     print("Source metadata: PASSED")
-    print("Source text consistency: PASSED")
-    print("All source webpages represented: PASSED")
-    print("Chunk order and overlap: PASSED")
-
-    print("\nSource webpages:", len(pages))
-    print("Passages:", len(records))
     print(
-        "Source documents represented:",
-        len(grouped)
+        "All source webpages represented: "
+        "PASSED"
+    )
+    print("Passage indices: PASSED")
+    print("Source reconstruction: PASSED")
+    print(
+        "Exact same-source duplicates: "
+        "PASSED"
     )
     print(
-        "Consecutive chunk pairs checked:",
-        checked_pairs
+        "Webpage artefact checks: PASSED"
+    )
+    print(
+        "Example boundary checks: PASSED"
+    )
+    print(
+        "Collection.csv consistency: PASSED"
+    )
+
+    print()
+
+    print(
+        "Source webpages:",
+        len(pages),
     )
 
     print(
-        "\nAll automated validation "
-        "checks passed."
+        "Passages:",
+        len(records),
     )
 
+    print(
+        "Sources represented:",
+        len(grouped),
+    )
+
+    if warnings:
+
+        print()
+        print("WARNINGS")
+        print("--------")
+
+        for warning in warnings:
+            print(
+                "-",
+                warning,
+            )
+
+    else:
+
+        print()
+
+        print(
+            "No passage-length warnings."
+        )
+
+    print()
+
+    print(
+        "All automated database "
+        "validation checks passed."
+    )
+
+    print()
+
+    print(
+        "NOTE: Automated validation does "
+        "not guarantee semantic passage "
+        "quality."
+    )
+
+    print(
+        "Manually review passage "
+        "boundaries and near-duplicate "
+        "passages before freezing "
+        "passage IDs."
+    )
+
+
+# ==================================================
+# 13. RUN
+# ==================================================
 
 if __name__ == "__main__":
+
     validate_database()
