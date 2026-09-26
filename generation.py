@@ -16,10 +16,6 @@ MODEL_NAME = "llama3.2"
 
 FALLBACK = "The information is not available in the knowledge base."
 
-# Requests are held open this long before giving up. A model loading from cold
-# can take a while on the first call; after that it stays in memory.
-TIMEOUT_SECONDS = 120
-
 SYSTEM_PROMPT = f"""You are a workplace rights assistant for Australian employees and employers.
 You answer questions using ONLY the Fair Work documents provided in the user message.
 
@@ -37,15 +33,31 @@ How to answer:
 class GenerationUnavailable(RuntimeError):
     """Raised when the model cannot be reached or fails to respond.
 
-    The caller is expected to catch this and fall back to showing the
-    retrieved passages, rather than letting the app break.
+    Distinct from the model deciding the passages do not answer the question:
+    that returns FALLBACK. The caller needs to tell the two apart, because one
+    means show the passages and the other means decline.
     """
 
 
 # ------------------------------------------------------------------ prompting
 
+def passage_text(passage):
+    """Read the passage body.
+
+    The database field is "passage". Earlier versions used "text", so both are
+    accepted rather than failing on a corpus built before the rename.
+    """
+    for field in ("passage", "text"):
+        if field in passage:
+            return passage[field]
+    raise KeyError(
+        "Passage record has neither a 'passage' nor a 'text' field: "
+        f"{sorted(passage.keys())}"
+    )
+
+
 def normalise_context(context):
-    """Accept either passage dicts or (passage, score) pairs.
+    """Accept either passage records or (passage, score) pairs.
 
     retrieve() returns pairs so the interface can show similarity scores; this
     module only needs the passages themselves.
@@ -65,7 +77,7 @@ def format_context(context):
         blocks.append(
             f"<document id=\"{i}\">\n"
             f"Title: {passage['title']}\n"
-            f"{passage['text'].strip()}\n"
+            f"{passage_text(passage).strip()}\n"
             f"</document>"
         )
     return "\n\n".join(blocks)
@@ -90,8 +102,8 @@ def build_messages(question, context):
 def is_available():
     """Check that Ollama is running and the model is installed.
 
-    Useful for showing the state in the interface before anyone asks a
-    question, rather than failing at the moment it matters.
+    Lets the interface show the state before anyone asks a question, rather
+    than failing at the moment it matters.
     """
     try:
         installed = ollama.list()
@@ -135,11 +147,12 @@ def generate_answer(question, context):
 
 if __name__ == "__main__":
     # Run directly to check the model works before wiring it into the app:
-    #     python src/generation.py
+    #     python generation.py
     sample = [
         {
+            "passage_id": "P0007",
             "title": "Sick and carers leave",
-            "text": (
+            "passage": (
                 "Casual employees do not get paid sick or carers leave. However, "
                 "casual employees are entitled to 2 days of unpaid carers leave "
                 "per occasion."
