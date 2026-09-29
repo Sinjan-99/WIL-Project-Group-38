@@ -75,10 +75,10 @@ MIN_SIMILARITY = 0.50
 #   hit@k is 1.000 at both 5 and 8, and abstention only uses the top score.
 #
 # No deduplication by source_id
-#   Capping each page at 1 or 2 passages lowered recall@5 (inferred 0.665 ->
-#   0.616 / 0.402; known 0.646 -> 0.585 / 0.497) and hit@5 for known questions
-#   (1.000 -> 0.967 / 0.900). Two facts often come from the same page, so
-#   capping removes the second one.
+#   Tested at k = 8. Capping each page at 2 or 1 passages cut the inferred
+#   questions with both facts retrieved from 21/24 to 16/24 and 8/24, and
+#   lowered known hit@8 from 1.000 to 0.967 / 0.900. Two facts usually come
+#   from different sections of the same page, so capping removes the second.
 
 ROOT = Path(__file__).parent
 DATA = ROOT / "data"
