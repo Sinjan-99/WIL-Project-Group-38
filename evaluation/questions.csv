@@ -1,0 +1,35 @@
+question_id,group_id,question,question_type,category,gold_summary,answerable
+G001_Q01,G001,Do casual employees get paid annual leave?,known,Annual Leave,Casual employees do not receive paid annual leave.,TRUE
+G001_Q02,G001,I'm working as a casual employee. Am I entitled to paid annual leave?,known,Annual Leave,Casual employees do not receive paid annual leave.,TRUE
+G001_Q03,G001,Can a casual worker take paid annual leave?,known,Annual Leave,Casual employees do not receive paid annual leave.,TRUE
+G002_Q01,G002,Do casual employees get paid sick leave?,known,Sick Leave,Casual employees are not entitled to paid sick leave under the National Employment Standards.,TRUE
+G002_Q02,G002,I'm a casual employee and I'm sick. Can I take paid sick leave?,known,Sick Leave,Casual employees are not entitled to paid sick leave under the National Employment Standards.,TRUE
+G002_Q03,G002,Is sick leave paid if I work as a casual?,known,Sick Leave,Casual employees are not entitled to paid sick leave under the National Employment Standards.,TRUE
+G003_Q01,G003,Do casual employees get paid carer's leave?,known,Carer's Leave,"Casual employees are not entitled to paid carer's leave, but they are entitled to unpaid carer's leave for 2 days per occasion.",TRUE
+G003_Q02,G003,Can a casual worker take paid carer's leave?,known,Carer's Leave,"Casual employees are not entitled to paid carer's leave, but they are entitled to unpaid carer's leave for 2 days per occasion.",TRUE
+G003_Q03,G003,"If I'm casual, can I get paid leave to care for someone?",known,Carer's Leave,"Casual employees are not entitled to paid carer's leave, but they are entitled to unpaid carer's leave for 2 days per occasion.",TRUE
+G004_Q01,G004,Do casual employees get paid family and domestic violence leave?,known,Family and Domestic Violence Leave,Casual employees can access 10 days of paid family and domestic violence leave each year.,TRUE
+G004_Q02,G004,Can a casual employee take paid family and domestic violence leave?,known,Family and Domestic Violence Leave,Casual employees can access 10 days of paid family and domestic violence leave each year.,TRUE
+G004_Q03,G004,Is paid family and domestic violence leave available to casual workers?,known,Family and Domestic Violence Leave,Casual employees can access 10 days of paid family and domestic violence leave each year.,TRUE
+G005_Q01,G005,Can a casual employee become a permanent employee?,known,Casual Employment,A casual employee can change to full-time or part-time employment if the employee and employer agree. Eligible casual employees also have a pathway to permanent employment under the NES.,TRUE
+G005_Q02,G005,Can I change from casual employment to permanent employment?,known,Casual Employment,A casual employee can change to full-time or part-time employment if the employee and employer agree. Eligible casual employees also have a pathway to permanent employment under the NES.,TRUE
+G005_Q03,G005,Is there a way for a casual worker to become permanent?,known,Casual Employment,A casual employee can change to full-time or part-time employment if the employee and employer agree. Eligible casual employees also have a pathway to permanent employment under the NES.,TRUE
+G006_Q01,G006,Do casual employees receive casual loading?,known,Casual Loading,"Casual employees receive a casual loading or a specific casual pay rate, depending on the applicable award, agreement or employment arrangement.",TRUE
+G006_Q02,G006,Does my casual pay include casual loading?,known,Casual Loading,"Casual employees receive a casual loading or a specific casual pay rate, depending on the applicable award, agreement or employment arrangement.",TRUE
+G006_Q03,G006,Why do casual workers receive a casual loading?,known,Casual Loading,"Casual employees receive a casual loading or a specific casual pay rate, depending on the applicable award, agreement or employment arrangement.",TRUE
+G007_Q01,G007,What is the right to disconnect?,known,Right to Disconnect,"The right to disconnect gives employees a right to refuse to monitor, read or respond to out-of-hours contact unless the refusal is unreasonable.",TRUE
+G007_Q02,G007,Can an employee refuse to respond to work messages outside working hours?,known,Right to Disconnect,"The right to disconnect gives employees a right to refuse to monitor, read or respond to out-of-hours contact unless the refusal is unreasonable.",TRUE
+G007_Q03,G007,Do employees have a right not to respond to work contact after hours?,known,Right to Disconnect,"The right to disconnect gives employees a right to refuse to monitor, read or respond to out-of-hours contact unless the refusal is unreasonable.",TRUE
+G008_Q01,G008,When must an employee receive a pay slip?,known,Pay Slips,Employees must receive a pay slip within 1 working day of being paid.,TRUE
+G008_Q02,G008,How soon should my employer give me a pay slip?,known,Pay Slips,Employees must receive a pay slip within 1 working day of being paid.,TRUE
+G008_Q03,G008,When does an employer have to provide a pay slip?,known,Pay Slips,Employees must receive a pay slip within 1 working day of being paid.,TRUE
+G009_Q01,G009,Does a casual employee have to give notice when resigning?,known,Resignation,"Casual employees do not have to give notice to their employer when they resign, although giving notice is considered best practice.",TRUE
+G009_Q02,G009,Do I need to give my employer notice if I resign from a casual job?,known,Resignation,"Casual employees do not have to give notice to their employer when they resign, although giving notice is considered best practice.",TRUE
+G009_Q03,G009,"If I'm a casual worker, do I have to give notice before leaving?",known,Resignation,"Casual employees do not have to give notice to their employer when they resign, although giving notice is considered best practice.",TRUE
+G010_Q01,G010,Are public holidays the same across all Australian states and territories?,known,Public Holidays,Public holidays can differ depending on the state or territory where an employee works.,TRUE
+G010_Q02,G010,Do public holidays differ between Australian states?,known,Public Holidays,Public holidays can differ depending on the state or territory where an employee works.,TRUE
+G010_Q03,G010,Are the public holidays the same everywhere in Australia?,known,Public Holidays,Public holidays can differ depending on the state or territory where an employee works.,TRUE
+G011_Q01,G011,How many hours can an international student work each week on a student visa?,out_of_kb,Student Visa,I do not enough information to answer this question.,FALSE
+G012_Q01,G012,How much tax should an international student pay in Australia?,out_of_kb,Tax,I do not enough information to answer this question.,FALSE
+G013_Q01,G013,Can an international student apply for an Australian driver's licence?,out_of_kb,Driver's Licence,I do not enough information to answer this question.,FALSE
+G014_Q01,G014,How much does an Australian student visa application cost?,out_of_kb,Student Visa,I do not enough information to answer this question.,FALSE
