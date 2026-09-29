@@ -53,14 +53,31 @@ import streamlit as st
 EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
 
 TOP_K = 5
-MIN_SIMILARITY = 0.35
+MIN_SIMILARITY = 0.50
 
-# MIN_SIMILARITY decides whether retrieved passages are relevant enough
-# to answer the question.
+# Retrieval settings, tuned by Krishi (Retrieval / ML) on the 282-passage
+# corpus with 30 known and 4 out-of-scope questions. Full evidence and
+# commands are in retrieval/README.md.
 #
-# Cosine similarity runs from -1 to 1.
-# Tune this value against evaluation questions, especially out-of-scope
-# questions, before final evaluation.
+# MIN_SIMILARITY = 0.50 (was 0.35, set when the corpus had 3 passages)
+#   The top passage's cosine similarity must reach this or the app declines.
+#   Sweep 0.35-0.65: 0.50 declines 3/4 out-of-scope questions and refuses
+#   0/30 answerable ones. 0.55 declines 4/4 but starts refusing answerable
+#   questions (1/30), the worse error for a rights assistant. The question
+#   that gets through (international student tax, 0.545) matches the Minimum
+#   wages page, which mentions tax without answering it, so declining it is
+#   left to generation.
+#
+# TOP_K = 5
+#   At k = 5 every answerable question has a correct passage (hit@5 = 1.000).
+#   k = 8 raises recall@k from 0.678 to 0.817 but adds ~2.5 wrong passages
+#   per question with no gain in hit rate.
+#
+# No deduplication by source_id
+#   Capping each page at 1 or 2 passages lowered hit@5 to 0.933 and recall@5
+#   to 0.583 or below. Answering passages are often not the top-ranked chunk
+#   of their page, so capping discards them. Keeping duplicates also keeps
+#   cases where two chunks of one page are both needed.
 
 ROOT = Path(__file__).parent
 DATA = ROOT / "data"
@@ -200,16 +217,15 @@ def build_index():
 
 # ------------------------------------------------------------------ retrieval
 
-def retrieve(
-    query,
-    k=TOP_K,
-    min_similarity=MIN_SIMILARITY,
-):
+def rank(query, k=None):
     """
-    Retrieve the most relevant passages for a question.
+    Rank passages for a question by cosine similarity, with no threshold.
+
+    Used by retrieve() for the app, and directly by the evaluation so that
+    ranking quality (NDCG) is measured separately from abstention.
 
     Returns:
-        [(passage_record, similarity_score), ...]
+        [(passage_record, similarity_score), ...], best first
     """
 
     vectors, passages = build_index()
@@ -226,18 +242,38 @@ def retrieve(
 
     similarities = vectors @ question_vector
 
-    order = np.argsort(similarities)[::-1][:k]
+    order = np.argsort(similarities)[::-1]
 
-    hits = [
+    if k is not None:
+        order = order[:k]
+
+    return [
         (
             passages[i],
             float(similarities[i]),
         )
         for i in order
-        if similarities[i] >= min_similarity
     ]
 
-    return hits
+
+def retrieve(
+    query,
+    k=TOP_K,
+    min_similarity=MIN_SIMILARITY,
+):
+    """
+    Retrieve the passages the model will see: the top k, keeping only
+    those at or above the similarity threshold.
+
+    Returns:
+        [(passage_record, similarity_score), ...]
+    """
+
+    return [
+        (p, score)
+        for p, score in rank(query, k)
+        if score >= min_similarity
+    ]
 
 
 def should_abstain(hits):
@@ -354,17 +390,28 @@ def ndcg_at_k(
     )
 
 
-def run_evaluation(questions):
+# Question files may label unanswerable questions "out_of_kb" (questions.csv).
+TYPE_ALIASES = {"out_of_kb": "out_of_scope"}
+
+SWEEP_THRESHOLDS = (0.35, 0.40, 0.45, 0.50, 0.55, 0.60, 0.65)
+
+
+def question_type(q):
+    t = str(q.get("type", "unspecified")).strip()
+    return TYPE_ALIASES.get(t, t)
+
+
+def run_evaluation(questions, k=TOP_K):
     """
-    Evaluate retrieval performance.
+    Evaluate retrieval, matching retrieval/ndcg_eval.py.
 
     Answerable questions:
-        NDCG@1
-        NDCG@3
-        NDCG@5
+        NDCG@1/3/5 on the full ranking (no threshold applied), plus
+        hit@k and recall@k at the k the app uses.
 
-    Out-of-scope questions:
-        checks whether the system correctly abstains.
+    Every question:
+        the top similarity score, so abstention can be scored at any
+        threshold without re-running retrieval.
 
     Generation is not used during retrieval evaluation.
     """
@@ -379,59 +426,56 @@ def run_evaluation(questions):
         if not question:
             continue
 
-        hits = retrieve(question)
+        ranked_hits = rank(question, k=max(5, k))
+        top_score = ranked_hits[0][1] if ranked_hits else float("-inf")
+        qtype = question_type(q)
 
-        # ------------------------------------------------ out-of-scope
+        abstention_rows.append(
+            {
+                "qid": q.get("qid", ""),
+                "question": question,
+                "type": qtype,
+                "top_score": top_score,
+                "top_title": ranked_hits[0][0]["title"] if ranked_hits else "",
+            }
+        )
 
-        if q.get("type") == "out_of_scope":
-
-            abstention_rows.append(
-                {
-                    "qid": q.get("qid", ""),
-                    "question": question,
-                    "declined": should_abstain(hits),
-                }
-            )
-
+        if qtype == "out_of_scope":
             continue
 
-        # ------------------------------------------------ answerable
-
-        # UPDATED DATABASE FIELD:
-        # old: p["id"]
-        # new: p["passage_id"]
-
-        ranked = [
-            p["passage_id"]
-            for p, _ in hits
-        ]
+        gold = set(q.get("gold_ids", []))
+        ranked = [p["passage_id"] for p, _ in ranked_hits]
+        found = sum(1 for pid in ranked[:k] if pid in gold)
 
         retrieval_rows.append(
             {
                 "qid": q.get("qid", ""),
-                "type": q.get(
-                    "type",
-                    "unspecified",
-                ),
-                "ndcg@1": ndcg_at_k(
-                    ranked,
-                    q.get("gold_ids", []),
-                    1,
-                ),
-                "ndcg@3": ndcg_at_k(
-                    ranked,
-                    q.get("gold_ids", []),
-                    3,
-                ),
-                "ndcg@5": ndcg_at_k(
-                    ranked,
-                    q.get("gold_ids", []),
-                    5,
-                ),
+                "type": qtype,
+                "ndcg@1": ndcg_at_k(ranked, gold, 1),
+                "ndcg@3": ndcg_at_k(ranked, gold, 3),
+                "ndcg@5": ndcg_at_k(ranked, gold, 5),
+                f"hit@{k}": 1.0 if found else 0.0,
+                f"recall@{k}": found / len(gold) if gold else 0.0,
+                "top_score": top_score,
             }
         )
 
     return retrieval_rows, abstention_rows
+
+
+def abstention_counts(abstention_rows, threshold):
+    """(out-of-scope declined, out-of-scope total,
+        answerable refused, answerable total) at a threshold."""
+
+    oos = [r for r in abstention_rows if r["type"] == "out_of_scope"]
+    ans = [r for r in abstention_rows if r["type"] != "out_of_scope"]
+
+    return (
+        sum(r["top_score"] < threshold for r in oos),
+        len(oos),
+        sum(r["top_score"] < threshold for r in ans),
+        len(ans),
+    )
 
 
 # -------------------------------------------------------------------------- UI
@@ -748,9 +792,12 @@ with eval_tab:
 
         st.caption(
             f"{len(questions)} questions loaded. "
-            "Retrieval only - generation is not called here."
+            "Retrieval only - generation is not called here. "
+            f"Settings: k = {TOP_K}, MIN_SIMILARITY = {MIN_SIMILARITY}."
         )
 
+        # Results are kept in session state so they survive reruns
+        # (for example when the download button is clicked).
         if st.button(
             "Run evaluation"
         ):
@@ -759,14 +806,27 @@ with eval_tab:
                 "Scoring..."
             ):
 
-                (
-                    retrieval_rows,
-                    abstention_rows,
-                ) = run_evaluation(
+                st.session_state["eval_results"] = run_evaluation(
                     questions
                 )
 
+        if "eval_results" in st.session_state:
+
+            (
+                retrieval_rows,
+                abstention_rows,
+            ) = st.session_state["eval_results"]
+
             # -------------------------------------------- retrieval results
+
+            st.caption(
+                "NDCG is scored on the full ranking, before the similarity "
+                "threshold is applied, so it measures ranking quality alone. "
+                "Abstention is scored separately below."
+            )
+
+            hit_key = f"hit@{TOP_K}"
+            recall_key = f"recall@{TOP_K}"
 
             for qtype in (
                 "known",
@@ -788,7 +848,7 @@ with eval_tab:
                     f"({len(subset)})"
                 )
 
-                cols = st.columns(3)
+                cols = st.columns(5)
 
                 for col, metric in zip(
                     cols,
@@ -796,6 +856,8 @@ with eval_tab:
                         "ndcg@1",
                         "ndcg@3",
                         "ndcg@5",
+                        hit_key,
+                        recall_key,
                     ),
                 ):
 
@@ -809,34 +871,61 @@ with eval_tab:
                     )
 
                     col.metric(
-                        metric.upper(),
-                        f"{mean:.4f}",
+                        metric.upper() if metric.startswith("ndcg") else metric,
+                        f"{mean:.4f}" if metric.startswith("ndcg") else f"{mean:.3f}",
+                    )
+
+            if retrieval_rows:
+                st.caption(
+                    f"{hit_key}: share of questions with at least one correct "
+                    f"passage in the top {TOP_K}. {recall_key}: share of all "
+                    f"correct passages found in the top {TOP_K}."
+                )
+
+                misses = [
+                    r["qid"]
+                    for r in retrieval_rows
+                    if r["ndcg@1"] == 0
+                ]
+
+                if misses:
+                    st.caption(
+                        "Top passage not a gold passage: "
+                        + ", ".join(misses)
                     )
 
             # ------------------------------------------- abstention results
 
             if abstention_rows:
 
-                declined = sum(
-                    r["declined"]
-                    for r in abstention_rows
+                ok, n_oos, wrong, n_ans = abstention_counts(
+                    abstention_rows,
+                    MIN_SIMILARITY,
                 )
 
                 st.subheader(
-                    "Out-of-scope questions "
-                    f"({len(abstention_rows)})"
+                    f"Abstention at MIN_SIMILARITY = {MIN_SIMILARITY}"
                 )
 
-                st.metric(
-                    "Correctly declined",
-                    f"{declined}/"
-                    f"{len(abstention_rows)}",
-                )
+                cols = st.columns(2)
+
+                if n_oos:
+                    cols[0].metric(
+                        "Out-of-scope correctly declined",
+                        f"{ok}/{n_oos}",
+                    )
+
+                if n_ans:
+                    cols[1].metric(
+                        "Answerable wrongly refused",
+                        f"{wrong}/{n_ans}",
+                    )
 
                 missed = [
-                    r["question"]
+                    r
                     for r in abstention_rows
-                    if not r["declined"]
+                    if r["type"] == "out_of_scope"
+                    and r["top_score"] >= MIN_SIMILARITY
                 ]
 
                 if missed:
@@ -846,27 +935,88 @@ with eval_tab:
                         "have declined:"
                     )
 
-                    for q in missed:
+                    for r in missed:
 
                         st.caption(
-                            f"· {q}"
+                            f"· {r['question']} "
+                            f"(top match: {r['top_title']}, "
+                            f"{r['top_score']:.3f})"
                         )
+
+                refused = [
+                    r
+                    for r in abstention_rows
+                    if r["type"] != "out_of_scope"
+                    and r["top_score"] < MIN_SIMILARITY
+                ]
+
+                if refused:
+
+                    st.caption(
+                        "Refused although answerable:"
+                    )
+
+                    for r in refused:
+
+                        st.caption(
+                            f"· {r['question']} "
+                            f"({r['top_score']:.3f})"
+                        )
+
+                with st.expander(
+                    "Threshold sweep"
+                ):
+
+                    sweep = []
+
+                    for t in SWEEP_THRESHOLDS:
+
+                        ok_t, n_oos, wrong_t, n_ans = abstention_counts(
+                            abstention_rows,
+                            t,
+                        )
+
+                        sweep.append(
+                            {
+                                "Threshold": f"{t:.2f}"
+                                + (" (current)" if abs(t - MIN_SIMILARITY) < 1e-9 else ""),
+                                "Out-of-scope declined": f"{ok_t}/{n_oos}",
+                                "Answerable refused": f"{wrong_t}/{n_ans}",
+                            }
+                        )
+
+                    st.table(sweep)
+
+                    st.caption(
+                        "Choose the highest threshold that refuses no "
+                        "answerable question."
+                    )
 
             # ---------------------------------------------------- download
 
             if retrieval_rows:
 
+                cols_out = [
+                    "ndcg@1",
+                    "ndcg@3",
+                    "ndcg@5",
+                    hit_key,
+                    recall_key,
+                    "top_score",
+                ]
+
                 header = (
                     "qid,type,"
-                    "ndcg@1,ndcg@3,ndcg@5\n"
+                    + ",".join(cols_out)
+                    + "\n"
                 )
 
                 body = "\n".join(
-                    f"{r['qid']},"
-                    f"{r['type']},"
-                    f"{r['ndcg@1']:.4f},"
-                    f"{r['ndcg@3']:.4f},"
-                    f"{r['ndcg@5']:.4f}"
+                    f"{r['qid']},{r['type']},"
+                    + ",".join(
+                        f"{r[c]:.4f}"
+                        for c in cols_out
+                    )
                     for r in retrieval_rows
                 )
 
