@@ -130,11 +130,15 @@ def main():
 
         if cov_ks and rows:
             short = [len(run.get(r["qid"], [])) for r in rows]
-            print(f"\n  coverage, all answerable questions (n={len(rows)})")
-            print(f"  {'k':>4}  " + "  ".join(f"{c + '@k':>10}" for c in cov_cols))
-            for k in cov_ks:
-                print(f"  {k:>4}  " + "  ".join(f"{mean(rows, f'{c}@{k}'):>10.3f}"
-                                             for c in cov_cols))
+            for qtype in types:
+                sub = [r for r in rows if r["type"] == qtype]
+                if not sub:
+                    continue
+                print(f"\n  coverage, {qtype} questions (n={len(sub)})")
+                print(f"  {'k':>4}  " + "  ".join(f"{c + '@k':>10}" for c in cov_cols))
+                for k in cov_ks:
+                    print(f"  {k:>4}  " + "  ".join(f"{mean(sub, f'{c}@{k}'):>10.3f}"
+                                                 for c in cov_cols))
             if min(short) < max(cov_ks):
                 print(f"  note: some queries have fewer than {max(cov_ks)} passages in this run")
 

@@ -52,32 +52,33 @@ import streamlit as st
 
 EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
 
-TOP_K = 5
+TOP_K = 8
 MIN_SIMILARITY = 0.50
 
 # Retrieval settings, tuned by Krishi (Retrieval / ML) on the 282-passage
-# corpus with 30 known and 4 out-of-scope questions. Full evidence and
-# commands are in retrieval/README.md.
+# corpus with 58 questions: 30 known, 24 inferred (each needing two facts)
+# and 4 out-of-scope. Evidence is in the retrieval/ run files.
 #
 # MIN_SIMILARITY = 0.50 (was 0.35, set when the corpus had 3 passages)
 #   The top passage's cosine similarity must reach this or the app declines.
-#   Sweep 0.35-0.65: 0.50 declines 3/4 out-of-scope questions and refuses
-#   0/30 answerable ones. 0.55 declines 4/4 but starts refusing answerable
-#   questions (1/30), the worse error for a rights assistant. The question
-#   that gets through (international student tax, 0.545) matches the Minimum
-#   wages page, which mentions tax without answering it, so declining it is
-#   left to generation.
+#   Sweep 0.35-0.65: 0.50 was the only value that declined all 4 out-of-scope
+#   questions while refusing none of the 54 answerable ones. 0.45 lets one
+#   out-of-scope question through; 0.55 refuses 2/54 answerable. The margin
+#   is narrow, so recheck as the question set grows.
 #
-# TOP_K = 5
-#   At k = 5 every answerable question has a correct passage (hit@5 = 1.000).
-#   k = 8 raises recall@k from 0.678 to 0.817 but adds ~2.5 wrong passages
-#   per question with no gain in hit rate.
+# TOP_K = 8 (was 5)
+#   On the inferred questions, both required facts were in the top 5 for
+#   16/24 questions and in the top 8 for 21/24; k = 10 gave no further gain.
+#   The missing fact was usually another section of an already-retrieved
+#   page. Cost: ~2.3 more non-relevant passages per question and a longer
+#   prompt, so generation needs a large enough context window (num_ctx).
+#   hit@k is 1.000 at both 5 and 8, and abstention only uses the top score.
 #
 # No deduplication by source_id
-#   Capping each page at 1 or 2 passages lowered hit@5 to 0.933 and recall@5
-#   to 0.583 or below. Answering passages are often not the top-ranked chunk
-#   of their page, so capping discards them. Keeping duplicates also keeps
-#   cases where two chunks of one page are both needed.
+#   Capping each page at 1 or 2 passages lowered recall@5 (inferred 0.665 ->
+#   0.616 / 0.402; known 0.646 -> 0.585 / 0.497) and hit@5 for known questions
+#   (1.000 -> 0.967 / 0.900). Two facts often come from the same page, so
+#   capping removes the second one.
 
 ROOT = Path(__file__).parent
 DATA = ROOT / "data"

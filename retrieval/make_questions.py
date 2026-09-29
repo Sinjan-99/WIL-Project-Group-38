@@ -30,6 +30,15 @@ GOLD = {
     "G008": ["P0135", "P0206"],                    # pay slip within 1 working day
     "G009": ["P0263", "P0121"],                    # casuals needn't give notice when resigning
     "G010": ["P0085", "P0098"],                    # public holidays differ by state; P0098 added after review (holidays depend on where you are based)
+    # --- inferred questions: each needs two facts, often from different sections (DRAFT, verify)
+    "G015": ["P0011", "P0014", "P0010"],           # eligibility 6/12 months + employer consults, responds within 21 days
+    "G016": ["P0063", "P0191", "P0190", "P0058", "P0070", "P0006", "P0057", "P0055", "P0064"],  # no paid sick/carer's + 2 days unpaid carer's
+    "G017": ["P0135", "P0206", "P0123", "P0136", "P0194"],  # pay slip within 1 day, English + records kept 7 years
+    "G018": ["P0098", "P0085"],                    # holidays where based for work + differ by state
+    "G019": ["P0263", "P0265", "P0180", "P0120", "P0121"],  # casuals no notice + deduct up to 1 week's wages
+    "G020": ["P0255", "P0256", "P0250"],           # adult rate when serving alcohol + junior % of adult rate
+    "G021": ["P0279", "P0006", "P0281", "P0282"],  # ways penalties combine with loading + rate includes loading
+    "G022": ["P0176", "P0166", "P0184"],           # what final pay includes + in lieu must equal full amount, paid by termination day
 }
 
 TYPE_MAP = {"out_of_kb": "out_of_scope"}
