@@ -1,0 +1,247 @@
+group_id,gold_summary,passage_id,title,passage,correct? (Y/N)
+G001,Casual employees do not receive paid annual leave.,P0072,Annual leave,"Annual leave (also known as holiday pay) allows an employee to be paid while having time off from work.
+Who gets annual leave
+All employees (except for casual employees) get paid annual leave. This entitlement comes from the National Employment Standards (NES).
+Awards, enterprise agreements and other registered agreements A document between an employer and their employees covering employment conditions. A registered agreement must be approved by and registered with the Fair Work Commission. Examples of registered agreements include enterprise agreements (including single and multi-enterprise) and greenfields agreements. can't offer less than the NES but they can give more annual leave.
+Watch our short video on annual leave to learn about:
+- who is entitled to annual leave
+- how much annual leave an employee is entitled to and how it accrues
+- how and when employees can take annual leave
+- cashing out annual leave.",
+G001,Casual employees do not receive paid annual leave.,P0006,Casual employees,"What casual employees get
+Under the National Employment Standards (NES), casual employees get:
+- access to a pathway to become a permanent employee
+- 2 days unpaid carer's leave per occasion
+- 2 days unpaid compassionate leave per occasion
+- 10 days paid family and domestic violence leave per year
+- unpaid community service leave.
+Casual employees can request flexible working arrangements and take unpaid parental leave if they:
+- have been employed by their employer as a casual employee on a regular and systematic basis over at least 12 months
+- reasonably expect to continue being employed by the employer on a regular and systematic basis.
+Casual employees are also paid:
+- a casual loading (a higher pay rate for being a casual employee), or
+- a specific pay rate for being a casual employee.
+Check your award or agreement, or the national minimum wage order for award and agreement free employees, for minimum pay rates for casual employees.
+You can use our Pay and Conditions Tool to find minimum award rates for casuals. You can find enterprise agreements on the Fair Work Commission website.
+Casuals don't get most types of paid leave, notice of termination or redundancy pay, even if they work regularly for a long time.",
+G002,Casual employees are not entitled to paid sick leave under the National Employment Standards.,P0063,Paid sick and carer's leave,"Who gets paid sick and carer's leave
+All employees except casuals are entitled to paid sick and carer's leave. This entitlement comes from the National Employment Standards.
+Employees may have to give notice or evidence to get paid for sick and carer's leave. Go to the Notice and medical certificates page for more information.",
+G002,Casual employees are not entitled to paid sick leave under the National Employment Standards.,P0190,Sick and carer’s leave and compassionate leave fact sheet,"Unpaid carer's leave
+What are the minimum entitlements to unpaid carer’s leave?
+Employees, including casual employees, are entitled to 2 days of unpaid carer’s leave each time a member of the employee’s immediate family or household requires care or support because of:
+- personal illness
+- injury
+- an unexpected emergency.
+Unpaid carer’s leave can be taken as 1 continuous period, such as 2 days in a row, or in separate periods if the employee and employer agree. Employees can only use unpaid carer’s leave if they don't have paid sick and carer’s leave available for that occasion. This doesn't apply to casual employees, because they don't receive paid sick and carer’s leave.",
+G002,Casual employees are not entitled to paid sick leave under the National Employment Standards.,P0191,Sick and carer’s leave and compassionate leave fact sheet,"Compassionate leave
+What are the minimum entitlements to compassionate leave?
+All employees, including casual employees, are entitled to 2 days of compassionate leave to spend time with a member of their immediate family or household who contracts or develops a life-threatening illness or injury.
+Compassionate leave can also be taken by employees:
+- after the death of an immediate family or household member
+- if a child who would have been part of the employee’s immediate family or household is stillborn, or
+- if the employee, or the employee’s current spouse or de facto partner, experiences a miscarriage.
+An employee may take compassionate leave for each occasion as:
+- a single continuous 2-day period, or
+- two separate periods of one day each, or
+- any separate periods to which the employee and their employer agree.
+What payments are required when compassionate leave is taken?
+If an employee (other than a casual employee) takes compassionate leave, the employer must pay the employee at the employee’s base rate of pay for the ordinary hours they would have worked during the period of leave.
+Casual employees are not entitled to any paid sick and carer’s leave or compassionate leave under the National Employment Standards. However, casuals are entitled to unpaid carer’s leave and compassionate leave.",
+G002,Casual employees are not entitled to paid sick leave under the National Employment Standards.,P0055,Sick and carer's leave,"Paid sick leave
+Full-time and part-time employees can take paid sick leave if they can’t work because of a personal illness or injury.
+Full-time employees are entitled to 10 sick days per year. The leave is pro-rata for part-time employees.
+Unused sick and carer’s leave is carried over to the next year.
+Learn more at:
+- Paid sick and carer's leave
+- Payment for sick and carer's leave.",
+G002,Casual employees are not entitled to paid sick leave under the National Employment Standards.,P0064,Paid sick and carer's leave,"When can an employee take paid sick leave
+Full-time and part-time employees can take paid sick leave if they can’t work because of a personal illness or injury. Employees must provide evidence to their employer if requested.
+Example: Taking paid sick leave
+Fiona is a full-time senior accounts manager in an advertising firm. She’s currently experiencing severe dizziness and joint pains associated with menopause. This is affecting her ability to work.
+She speaks to her doctor who determines that Fiona isn’t fit for work and recommends that Fiona take 2 weeks off work while she manages her symptoms.
+Fiona has an accumulated sick leave balance of more than 8 weeks.
+Fiona provides her employer with a medical certificate to cover the 2 weeks of leave.",
+G003,"Casual employees are not entitled to paid carer's leave, but they are entitled to unpaid carer's leave for 2 days per occasion.",P0063,Paid sick and carer's leave,"Who gets paid sick and carer's leave
+All employees except casuals are entitled to paid sick and carer's leave. This entitlement comes from the National Employment Standards.
+Employees may have to give notice or evidence to get paid for sick and carer's leave. Go to the Notice and medical certificates page for more information.",
+G003,"Casual employees are not entitled to paid carer's leave, but they are entitled to unpaid carer's leave for 2 days per occasion.",P0191,Sick and carer’s leave and compassionate leave fact sheet,"Compassionate leave
+What are the minimum entitlements to compassionate leave?
+All employees, including casual employees, are entitled to 2 days of compassionate leave to spend time with a member of their immediate family or household who contracts or develops a life-threatening illness or injury.
+Compassionate leave can also be taken by employees:
+- after the death of an immediate family or household member
+- if a child who would have been part of the employee’s immediate family or household is stillborn, or
+- if the employee, or the employee’s current spouse or de facto partner, experiences a miscarriage.
+An employee may take compassionate leave for each occasion as:
+- a single continuous 2-day period, or
+- two separate periods of one day each, or
+- any separate periods to which the employee and their employer agree.
+What payments are required when compassionate leave is taken?
+If an employee (other than a casual employee) takes compassionate leave, the employer must pay the employee at the employee’s base rate of pay for the ordinary hours they would have worked during the period of leave.
+Casual employees are not entitled to any paid sick and carer’s leave or compassionate leave under the National Employment Standards. However, casuals are entitled to unpaid carer’s leave and compassionate leave.",
+G003,"Casual employees are not entitled to paid carer's leave, but they are entitled to unpaid carer's leave for 2 days per occasion.",P0190,Sick and carer’s leave and compassionate leave fact sheet,"Unpaid carer's leave
+What are the minimum entitlements to unpaid carer’s leave?
+Employees, including casual employees, are entitled to 2 days of unpaid carer’s leave each time a member of the employee’s immediate family or household requires care or support because of:
+- personal illness
+- injury
+- an unexpected emergency.
+Unpaid carer’s leave can be taken as 1 continuous period, such as 2 days in a row, or in separate periods if the employee and employer agree. Employees can only use unpaid carer’s leave if they don't have paid sick and carer’s leave available for that occasion. This doesn't apply to casual employees, because they don't receive paid sick and carer’s leave.",
+G003,"Casual employees are not entitled to paid carer's leave, but they are entitled to unpaid carer's leave for 2 days per occasion.",P0058,Sick and carer's leave,"Unpaid carer’s leave
+Casual employees are entitled to 2 days of unpaid carer’s leave per occasion.
+Full-time and part-time employees can take unpaid carer’s leave if they have no paid sick or carer’s leave left.
+See Unpaid carer’s leave.",
+G003,"Casual employees are not entitled to paid carer's leave, but they are entitled to unpaid carer's leave for 2 days per occasion.",P0070,Sick and carer's leave,"Employees can take sick leave when they’re sick or injured and can’t come to work. They can also take leave to care for someone who is sick or injured.
+Sick and carer’s leave is also known as personal leave.
+Employees can take carer’s leave to care for or support a person that lives with them or a member of their immediate family (eg. spouse, partner, parent, step-parent, child, sibling, grandparent). The person must be ill or injured or need help with an unexpected emergency.
+Employees accumulate sick and carer’s leave as soon as they start working. It can be taken any time, including during the first 12 months of work.
+Employers can ask employees to give evidence about why they had to take leave. This is usually a doctor’s certificate or a statutory declaration.
+How much leave does an employee get?
+Full-time and part-time employees get up to 10 days of sick and carer’s leave every year. The amount of leave depends on how many hours they usually work each week. Any leave left over at the end of each year carries over to the next year.
+Casuals get 2 days of unpaid carer’s leave each time they need it.
+Full-time and part-time employees can take unpaid carer’s leave if they don’t have any paid sick or carer’s leave left.",
+G003,"Casual employees are not entitled to paid carer's leave, but they are entitled to unpaid carer's leave for 2 days per occasion.",P0006,Casual employees,"What casual employees get
+Under the National Employment Standards (NES), casual employees get:
+- access to a pathway to become a permanent employee
+- 2 days unpaid carer's leave per occasion
+- 2 days unpaid compassionate leave per occasion
+- 10 days paid family and domestic violence leave per year
+- unpaid community service leave.
+Casual employees can request flexible working arrangements and take unpaid parental leave if they:
+- have been employed by their employer as a casual employee on a regular and systematic basis over at least 12 months
+- reasonably expect to continue being employed by the employer on a regular and systematic basis.
+Casual employees are also paid:
+- a casual loading (a higher pay rate for being a casual employee), or
+- a specific pay rate for being a casual employee.
+Check your award or agreement, or the national minimum wage order for award and agreement free employees, for minimum pay rates for casual employees.
+You can use our Pay and Conditions Tool to find minimum award rates for casuals. You can find enterprise agreements on the Fair Work Commission website.
+Casuals don't get most types of paid leave, notice of termination or redundancy pay, even if they work regularly for a long time.",
+G003,"Casual employees are not entitled to paid carer's leave, but they are entitled to unpaid carer's leave for 2 days per occasion.",P0057,Sick and carer's leave,"Paid carer’s leave
+Paid carer’s leave is available to full-time and part-time employees. It can be taken when they need to look after a family member or a member of their household who needs care or support because of a:
+- personal illness
+- injury, or
+- an unexpected emergency.
+Find out more at Paid sick and carer's leave.",
+G004,Casual employees can access 10 days of paid family and domestic violence leave each year.,P0076,Family and domestic violence leave,"All employees are entitled to 10 days of paid family and domestic violence leave each year. This includes full-time, part-time and casual employees.
+Support services
+1800RESPECT is the national domestic, family and sexual violence counselling, information and support service. If you or someone you know is experiencing, or at risk of experiencing, domestic, family or sexual violence, call 1800RESPECT on 1800 737 732 or visit 1800RESPECT.org.au.",
+G004,Casual employees can access 10 days of paid family and domestic violence leave each year.,P0079,Family and domestic violence leave,"Paid family and domestic violence leave
+All employees can access 10 days of paid family and domestic violence leave each year. This includes full-time, part-time and casual employees.
+Employees must be experiencing family and domestic violence to be eligible to take paid family and domestic violence leave.
+The entitlement to paid family and domestic violence leave comes from the National Employment Standards (NES). It’s a paid minimum leave entitlement, like annual leave or paid sick and carer’s leave.
+Watch our short video to learn about:
+- how much paid leave employees can access
+- when employees can access the leave
+- notice and evidence requirements.",
+G004,Casual employees can access 10 days of paid family and domestic violence leave each year.,P0006,Casual employees,"What casual employees get
+Under the National Employment Standards (NES), casual employees get:
+- access to a pathway to become a permanent employee
+- 2 days unpaid carer's leave per occasion
+- 2 days unpaid compassionate leave per occasion
+- 10 days paid family and domestic violence leave per year
+- unpaid community service leave.
+Casual employees can request flexible working arrangements and take unpaid parental leave if they:
+- have been employed by their employer as a casual employee on a regular and systematic basis over at least 12 months
+- reasonably expect to continue being employed by the employer on a regular and systematic basis.
+Casual employees are also paid:
+- a casual loading (a higher pay rate for being a casual employee), or
+- a specific pay rate for being a casual employee.
+Check your award or agreement, or the national minimum wage order for award and agreement free employees, for minimum pay rates for casual employees.
+You can use our Pay and Conditions Tool to find minimum award rates for casuals. You can find enterprise agreements on the Fair Work Commission website.
+Casuals don't get most types of paid leave, notice of termination or redundancy pay, even if they work regularly for a long time.",
+G005,A casual employee can change to full-time or part-time employment if the employee and employer agree. Eligible casual employees also have a pathway to permanent employment under the NES.,P0008,Casual employees,"Changing to full-time or part-time employment
+Employees who start as a casual, will stay casual until their employment status changes either through:
+- accepting an alternative employment offer and starting work on that basis, or
+- changing to permanent under the rules in the NES, their award or agreement, or
+- a Fair Work Commission order.
+A casual employee can change to full-time or part-time employment at any time if the employer and employee both agree to it.
+Under the NES, casual employees have the right to access a pathway to become a permanent full-time or part-time employee, in some circumstances. For more information, go to Becoming a permanent employee.",
+G005,A casual employee can change to full-time or part-time employment if the employee and employer agree. Eligible casual employees also have a pathway to permanent employment under the NES.,P0010,Becoming a permanent employee,"Learn how a casual employee can become a permanent employee (full-time or part-time).
+Changing to permanent employment
+A casual employee can change to permanent employment (full-time or part-time) at any time if the employer and employee agree.
+Casuals also have a pathway to permanent employment under the National Employment Standards (NES). This is referred to as the ‘employee choice pathway’. Under these rules, eligible casuals can notify their employer in writing of their intention to change to permanent employment. An employer can only refuse the notice for certain reasons.",
+G005,A casual employee can change to full-time or part-time employment if the employee and employer agree. Eligible casual employees also have a pathway to permanent employment under the NES.,P0011,Becoming a permanent employee,"Making a notice
+A casual can provide written notice to their employer to change to permanent (full-time or part-time) employment under the employee choice pathway if they:
+- have been employed for at least 6 months (12 months if employed by a small business)
+- believe they no longer meet the requirements of the casual employee definition.",
+G006,"Casual employees receive a casual loading or a specific casual pay rate, depending on the applicable award, agreement or employment arrangement.",P0006,Casual employees,"What casual employees get
+Under the National Employment Standards (NES), casual employees get:
+- access to a pathway to become a permanent employee
+- 2 days unpaid carer's leave per occasion
+- 2 days unpaid compassionate leave per occasion
+- 10 days paid family and domestic violence leave per year
+- unpaid community service leave.
+Casual employees can request flexible working arrangements and take unpaid parental leave if they:
+- have been employed by their employer as a casual employee on a regular and systematic basis over at least 12 months
+- reasonably expect to continue being employed by the employer on a regular and systematic basis.
+Casual employees are also paid:
+- a casual loading (a higher pay rate for being a casual employee), or
+- a specific pay rate for being a casual employee.
+Check your award or agreement, or the national minimum wage order for award and agreement free employees, for minimum pay rates for casual employees.
+You can use our Pay and Conditions Tool to find minimum award rates for casuals. You can find enterprise agreements on the Fair Work Commission website.
+Casuals don't get most types of paid leave, notice of termination or redundancy pay, even if they work regularly for a long time.",
+G006,"Casual employees receive a casual loading or a specific casual pay rate, depending on the applicable award, agreement or employment arrangement.",P0001,Casual employees,"A casual employee
+A person is a casual employee if, when they start employment:
+- the employment relationship has no firm advance commitment to ongoing work, taking into account a number of factors, and
+- they’re entitled to a casual loading or specific casual pay rate under an award, registered agreement, or employment contract.",
+G007,"The right to disconnect gives employees a right to refuse to monitor, read or respond to out-of-hours contact unless the refusal is unreasonable.",P0025,Right to disconnect,"Employees have the right to refuse employer or third-party contact outside working hours in some circumstances.
+About the right to disconnect
+Employees have the right to refuse to monitor, read or respond to contact, or attempted contact, outside their working hours unless doing so is unreasonable. This includes contact or attempted contact from an employer or a third party.
+Contact can include using a range of communication channels such as calls, emails, texts, social media and messaging services.
+Third parties can include clients, suppliers, staff from other businesses, or members of the public.",
+G007,"The right to disconnect gives employees a right to refuse to monitor, read or respond to out-of-hours contact unless the refusal is unreasonable.",P0027,Right to disconnect,"About the right to disconnect
+The right to disconnect rules don't make out of hours contact unlawful. Instead, they give employees a right to refuse to monitor, read or respond to the contact, unless doing so is unreasonable.
+It's important to remember that the focus is on whether the employee's refusal was unreasonable.
+Awards and agreements can include additional right to disconnect provisions. Learn more at right to disconnect in awards and agreements.
+Tip: Help for small business
+Watch our video series, including our Right to disconnect and small business video, to understand the rules and how they apply to small business.",
+G008,Employees must receive a pay slip within 1 working day of being paid.,P0135,Pay slips and record-keeping,"Pay slips
+Employees must get a pay slip within 1 working day of being paid. If your employer isn’t giving you a pay slip, ask for one.
+Pay slips have to be provided to employees in English, either electronically or hard copy.
+A pay slip has to include:
+- the employer’s name
+- the employers ABN
+- the employee’s name
+- the date of payment
+- the period that the payment is for
+- the gross and net amount of payment.
+The pay slip also needs to have information about any bonuses, allowances, penalty rates, deductions and superannuation.
+For a full list of what needs to be included on a pay slip and to find and download our template, go to the pay slips page.",
+G008,Employees must receive a pay slip within 1 working day of being paid.,P0206,Record-keeping and pay slips fact sheet,"Superannuation (super) contributions records
+In most cases your employer is required to pay super for you. The record must include all of the following:
+- the amount of the contributions made
+- the dates on which each contribution was made
+- the period over which the contributions were made
+- the name of any fund to which a contribution was made
+- the basis on which the employer became liable to make the contribution, including a record of any election made by the employee (including the date) to have their super contributions paid into a particular fund.
+Note: Employers who contribute a defined benefit interest in a defined benefit fund do not have to include these contributions in the record.
+What are the pay slip obligations?
+Pay slips must be issued to each employee:
+- within one working day of pay day, even if an employee is on leave
+- in electronic form or hard copy.
+It is best practice for pay slips to be written in plain and simple English.
+What information must be included on a pay slip?",
+G009,"Casual employees do not have to give notice to their employer when they resign, although giving notice is considered best practice.",P0263,Resignation,"Casual employees
+Casual employees don’t have to give notice to their employer when they resign. However, it is best practice for employees to give their employer notice of their last day.
+For more information, visit Who doesn’t get notice.",
+G009,"Casual employees do not have to give notice to their employer when they resign, although giving notice is considered best practice.",P0121,Fast Food Industry Award,"NOTICE OF TERMINATION
+NOTICE PERIOD
+Minimum notice period
+N/A
+Notice periods don't apply to casual employees. This includes when an employee resigns or if they are terminated for any reason.
+FINAL PAY
+Employees get the following in their final pay:
+outstanding wages for hours worked, including penalty rates and allowances",
+G010,Public holidays can differ depending on the state or territory where an employee works.,P0085,Public holidays,"Public holidays can be different depending on the state or territory you work in.
+Find recent and upcoming public holidays in your state or territory below.
+Upcoming public holidays
+Below are the public holidays over the next few months in each state and territory.
+For a full list of public holidays in your state or territory this year, go to 2026 public holidays.",
+G010,Public holidays can differ depending on the state or territory where an employee works.,P0098,Public holidays,"Working outside your state or region on a public holiday
+An employee is entitled to the public holidays that fall where they are based for work, not where they are working on the day of the public holiday.
+Example: Employee working outside their state on a day that is a public holiday
+Cass is an employee of a business located in Melbourne. She has been sent to Sydney to perform work during November. During her interstate visit, the Melbourne Cup public holiday is observed in Melbourne. As Cass's job is based in Melbourne, she's entitled to her public holiday entitlements that day, even though there isn't a public holiday where she is physically working in Sydney.
+Watch our short video to learn about:
+- working or not working on a public holiday
+- when an employer can ask an employee to work a public holiday
+- refusing an employer’s requests to a work a public holiday.
+Source reference for page: Fair Work Act 2009 sections 114–116",
