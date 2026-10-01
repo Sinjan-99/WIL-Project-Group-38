@@ -1,15 +1,3 @@
-"""Answer generation for the Casual Work Rights Assistant.
-
-Runs a local model through Ollama. Nothing leaves the machine and there is no
-API key or cost, but the model must be installed and the Ollama service must be
-running:
-
-    ollama pull llama3.2
-
-The prompt below is the team's. Changes to wording, tone or the rules the model
-follows belong to whoever owns generation, not to the plumbing around it.
-"""
-
 import ollama
 
 MODEL_NAME = "llama3.2"
@@ -31,22 +19,11 @@ How to answer:
 
 
 class GenerationUnavailable(RuntimeError):
-    """Raised when the model cannot be reached or fails to respond.
+    """Raised when the model cannot be reached or fails to respond."""
 
-    Distinct from the model deciding the passages do not answer the question:
-    that returns FALLBACK. The caller needs to tell the two apart, because one
-    means show the passages and the other means decline.
-    """
-
-
-# ------------------------------------------------------------------ prompting
 
 def passage_text(passage):
-    """Read the passage body.
 
-    The database field is "passage". Earlier versions used "text", so both are
-    accepted rather than failing on a corpus built before the rename.
-    """
     for field in ("passage", "text"):
         if field in passage:
             return passage[field]
@@ -57,11 +34,6 @@ def passage_text(passage):
 
 
 def normalise_context(context):
-    """Accept either passage records or (passage, score) pairs.
-
-    retrieve() returns pairs so the interface can show similarity scores; this
-    module only needs the passages themselves.
-    """
     passages = []
     for item in context:
         if isinstance(item, (tuple, list)) and len(item) == 2:
@@ -84,7 +56,6 @@ def format_context(context):
 
 
 def build_messages(question, context):
-    # Documents first, question last: small models attend most to the end of the prompt.
     user_content = (
         "<documents>\n"
         f"{format_context(context)}\n"
@@ -97,14 +68,11 @@ def build_messages(question, context):
     ]
 
 
-# ----------------------------------------------------------------- generation
+    # -------------------------
+    # Generation
+    # -------------------------
 
 def is_available():
-    """Check that Ollama is running and the model is installed.
-
-    Lets the interface show the state before anyone asks a question, rather
-    than failing at the moment it matters.
-    """
     try:
         installed = ollama.list()
     except Exception:
@@ -115,12 +83,6 @@ def is_available():
 
 
 def generate_answer(question, context):
-    """Return an answer drawn only from the supplied passages.
-
-    Returns FALLBACK when the passages do not answer the question, either
-    because none were retrieved or because the model says so.
-    Raises GenerationUnavailable if the model cannot be reached.
-    """
     if not context:
         return FALLBACK
 
@@ -143,11 +105,11 @@ def generate_answer(question, context):
         raise GenerationUnavailable("Unexpected response shape from Ollama") from error
 
 
-# ----------------------------------------------------------- manual smoke test
+    # -------------------------
+    # Testing
+    # -------------------------
 
 if __name__ == "__main__":
-    # Run directly to check the model works before wiring it into the app:
-    #     python generation.py
     sample = [
         {
             "passage_id": "P0007",

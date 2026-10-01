@@ -1,0 +1,163 @@
+question_id,question_type,question,k,rougeL,bertscore
+G001_Q01,known,Do casual employees get annual leave?,1,0.75,0.9600104689598083
+G001_Q01,known,Do casual employees get annual leave?,3,0.75,0.9600104689598083
+G001_Q01,known,Do casual employees get annual leave?,5,0.7999999999999999,0.9840731620788574
+G001_Q02,known,Are casual workers entitled to paid annual leave?,1,0.5882352941176471,0.9754683375358582
+G001_Q02,known,Are casual workers entitled to paid annual leave?,3,0.5882352941176471,0.9754683375358582
+G001_Q02,known,Are casual workers entitled to paid annual leave?,5,0.5555555555555556,0.9530851244926453
+G001_Q03,known,Can a casual employee receive annual leave?,1,0.75,0.9600104689598083
+G001_Q03,known,Can a casual employee receive annual leave?,3,0.6363636363636364,0.9439671039581299
+G001_Q03,known,Can a casual employee receive annual leave?,5,0.9333333333333333,0.9894553422927856
+G002_Q01,known,Do casual employees get paid sick leave?,1,0.6666666666666666,0.9395163655281067
+G002_Q01,known,Do casual employees get paid sick leave?,3,0.6666666666666666,0.9395163655281067
+G002_Q01,known,Do casual employees get paid sick leave?,5,0.75,0.9611942172050476
+G002_Q02,known,Are casual workers entitled to paid sick leave?,1,0.5925925925925927,0.933505654335022
+G002_Q02,known,Are casual workers entitled to paid sick leave?,3,0.6666666666666666,0.9555520415306091
+G002_Q02,known,Are casual workers entitled to paid sick leave?,5,0.6666666666666666,0.9555520415306091
+G002_Q03,known,Can a casual employee claim paid sick leave?,1,0.64,0.952420711517334
+G002_Q03,known,Can a casual employee claim paid sick leave?,3,0.6666666666666666,0.9395163655281067
+G002_Q03,known,Can a casual employee claim paid sick leave?,5,0.6666666666666666,0.9395163655281067
+G003_Q01,known,Do casual employees get carer's leave?,1,0.2909090909090909,0.8979014158248901
+G003_Q01,known,Do casual employees get carer's leave?,3,0.4444444444444444,0.9503252506256104
+G003_Q01,known,Do casual employees get carer's leave?,5,0.4444444444444444,0.9503252506256104
+G003_Q02,known,Can casual workers take unpaid carer's leave?,1,0.39999999999999997,0.9319786429405212
+G003_Q02,known,Can casual workers take unpaid carer's leave?,3,0.27118644067796616,0.8935533165931702
+G003_Q02,known,Can casual workers take unpaid carer's leave?,5,0.27118644067796616,0.8935533165931702
+G003_Q03,known,What carer's leave is available to casual employees?,1,0.4848484848484849,0.9548908472061157
+G003_Q03,known,What carer's leave is available to casual employees?,3,0.27118644067796616,0.8938788175582886
+G003_Q03,known,What carer's leave is available to casual employees?,5,0.2456140350877193,0.8947768211364746
+G004_Q01,known,How much paid family and domestic violence leave do casual employees get?,1,0.7741935483870969,0.9818448424339294
+G004_Q01,known,How much paid family and domestic violence leave do casual employees get?,3,0.8666666666666666,0.9906423687934875
+G004_Q01,known,How much paid family and domestic violence leave do casual employees get?,5,0.8666666666666666,0.9906423687934875
+G004_Q02,known,Do casual workers have paid family and domestic violence leave?,1,0.631578947368421,0.9613381624221802
+G004_Q02,known,Do casual workers have paid family and domestic violence leave?,3,0.6470588235294118,0.9635918736457825
+G004_Q02,known,Do casual workers have paid family and domestic violence leave?,5,0.8148148148148148,0.9732687473297119
+G004_Q03,known,Are casual employees entitled to paid domestic violence leave?,1,0.9090909090909091,0.9787904620170593
+G004_Q03,known,Are casual employees entitled to paid domestic violence leave?,3,0.9090909090909091,0.9787904620170593
+G004_Q03,known,Are casual employees entitled to paid domestic violence leave?,5,0.7058823529411765,0.963157057762146
+G005_Q01,known,How can a casual employee become permanent?,1,0.6415094339622641,0.9450333714485168
+G005_Q01,known,How can a casual employee become permanent?,3,0.3013698630136986,0.875387966632843
+G005_Q01,known,How can a casual employee become permanent?,5,0.27499999999999997,0.8817012310028076
+G005_Q02,known,Can a casual worker change to full-time or part-time employment?,1,0.6909090909090909,0.9428761005401611
+G005_Q02,known,Can a casual worker change to full-time or part-time employment?,3,0.6909090909090909,0.9428761005401611
+G005_Q02,known,Can a casual worker change to full-time or part-time employment?,5,0.6909090909090909,0.9428761005401611
+G005_Q03,known,What are the ways a casual employee can move to permanent employment?,1,0.5365853658536586,0.926085352897644
+G005_Q03,known,What are the ways a casual employee can move to permanent employment?,3,0.5116279069767441,0.9152439832687378
+G005_Q03,known,What are the ways a casual employee can move to permanent employment?,5,0.3846153846153846,0.8971707224845886
+G006_Q01,known,Do casual employees receive casual loading?,1,0.3181818181818182,0.8931611776351929
+G006_Q01,known,Do casual employees receive casual loading?,3,0.5853658536585366,0.9271894693374634
+G006_Q01,known,Do casual employees receive casual loading?,5,0.55,0.9256457090377808
+G006_Q02,known,What extra pay do casual workers receive?,1,0.17142857142857143,0.8583410978317261
+G006_Q02,known,What extra pay do casual workers receive?,3,0.45714285714285713,0.9262111783027649
+G006_Q02,known,What extra pay do casual workers receive?,5,0.45714285714285713,0.9262111783027649
+G006_Q03,known,How are casual employees compensated for being casual?,1,0.4444444444444444,0.9153001308441162
+G006_Q03,known,How are casual employees compensated for being casual?,3,0.41509433962264153,0.9123708605766296
+G006_Q03,known,How are casual employees compensated for being casual?,5,0.6153846153846153,0.9400866031646729
+G007_Q01,known,What is the right to disconnect?,1,0.19999999999999998,0.8798478841781616
+G007_Q01,known,What is the right to disconnect?,3,0.3684210526315789,0.9189242720603943
+G007_Q01,known,What is the right to disconnect?,5,0.6521739130434783,0.9509298205375671
+G007_Q02,known,Can employees ignore work messages after hours?,1,0.2978723404255319,0.8927329182624817
+G007_Q02,known,Can employees ignore work messages after hours?,3,0.6521739130434783,0.9509298205375671
+G007_Q02,known,Can employees ignore work messages after hours?,5,0.6521739130434783,0.9509298205375671
+G007_Q03,known,Can an employee refuse to respond to an employer outside working hours?,1,0.26865671641791045,0.8829226493835449
+G007_Q03,known,Can an employee refuse to respond to an employer outside working hours?,3,0.6521739130434783,0.9509298205375671
+G007_Q03,known,Can an employee refuse to respond to an employer outside working hours?,5,0.6521739130434783,0.9509298205375671
+G008_Q01,known,When must an employer give an employee a pay slip?,1,0.7586206896551724,0.968773365020752
+G008_Q01,known,When must an employer give an employee a pay slip?,3,0.7586206896551724,0.968773365020752
+G008_Q01,known,When must an employer give an employee a pay slip?,5,0.7586206896551724,0.968773365020752
+G008_Q02,known,How soon should I receive my pay slip?,1,0.8461538461538461,0.971972644329071
+G008_Q02,known,How soon should I receive my pay slip?,3,0.8461538461538461,0.971972644329071
+G008_Q02,known,How soon should I receive my pay slip?,5,0.8461538461538461,0.971972644329071
+G008_Q03,known,How long does an employer have to provide a pay slip after payment?,1,0.8148148148148148,0.9717491269111633
+G008_Q03,known,How long does an employer have to provide a pay slip after payment?,3,0.8148148148148148,0.9717491269111633
+G008_Q03,known,How long does an employer have to provide a pay slip after payment?,5,0.8148148148148148,0.9717491269111633
+G009_Q01,known,Does a casual employee have to give notice when resigning?,1,0.5454545454545454,0.9399380087852478
+G009_Q01,known,Does a casual employee have to give notice when resigning?,3,0.742857142857143,0.9577538967132568
+G009_Q01,known,Does a casual employee have to give notice when resigning?,5,0.742857142857143,0.9577538967132568
+G009_Q02,known,Do casual workers need to give notice before quitting?,1,0.6274509803921569,0.9572184681892395
+G009_Q02,known,Do casual workers need to give notice before quitting?,3,0.6274509803921569,0.9572184681892395
+G009_Q02,known,Do casual workers need to give notice before quitting?,5,0.588235294117647,0.9595750570297241
+G009_Q03,known,Can a casual employee resign without giving notice?,1,0.7027027027027026,0.955149233341217
+G009_Q03,known,Can a casual employee resign without giving notice?,3,0.6857142857142857,0.9684177041053772
+G009_Q03,known,Can a casual employee resign without giving notice?,5,0.6857142857142857,0.9684177041053772
+G010_Q01,known,Do public holidays vary between Australian states?,1,0.17857142857142858,0.897357702255249
+G010_Q01,known,Do public holidays vary between Australian states?,3,0.16666666666666666,0.8796495199203491
+G010_Q01,known,Do public holidays vary between Australian states?,5,0.3478260869565218,0.9281184673309326
+G010_Q02,known,Are public holidays the same in every state and territory?,1,0.8000000000000002,0.9674948453903198
+G010_Q02,known,Are public holidays the same in every state and territory?,3,0.8000000000000002,0.9674948453903198
+G010_Q02,known,Are public holidays the same in every state and territory?,5,0.8000000000000002,0.9674948453903198
+G010_Q03,known,Can public holidays differ depending on where I work?,1,0.7586206896551724,0.9669445157051086
+G010_Q03,known,Can public holidays differ depending on where I work?,3,0.40625,0.9211191534996033
+G010_Q03,known,Can public holidays differ depending on where I work?,5,0.7586206896551724,0.9669445157051086
+G015_Q01,inferred,"How can a casual employee become permanent, and what happens after they give notice?",1,0.38181818181818183,0.8993858098983765
+G015_Q01,inferred,"How can a casual employee become permanent, and what happens after they give notice?",3,0.4576271186440678,0.910576343536377
+G015_Q01,inferred,"How can a casual employee become permanent, and what happens after they give notice?",5,0.5064935064935064,0.9283918142318726
+G015_Q02,inferred,What is the process for a casual worker to move to permanent employment?,1,0.2184873949579832,0.8733888864517212
+G015_Q02,inferred,What is the process for a casual worker to move to permanent employment?,3,0.31578947368421056,0.8889963626861572
+G015_Q02,inferred,What is the process for a casual worker to move to permanent employment?,5,0.1758241758241758,0.857161283493042
+G015_Q03,inferred,"If a casual employee wants to become permanent, what eligibility and employer response rules apply?",1,0.25352112676056343,0.8742736577987671
+G015_Q03,inferred,"If a casual employee wants to become permanent, what eligibility and employer response rules apply?",3,0.30409356725146197,0.8830589056015015
+G015_Q03,inferred,"If a casual employee wants to become permanent, what eligibility and employer response rules apply?",5,0.3163841807909604,0.8812212347984314
+G016_Q01,inferred,What leave can a casual employee take if they are sick or need to care for someone?,1,0.41379310344827586,0.9202341437339783
+G016_Q01,inferred,What leave can a casual employee take if they are sick or need to care for someone?,3,0.41379310344827586,0.9125845432281494
+G016_Q01,inferred,What leave can a casual employee take if they are sick or need to care for someone?,5,0.3116883116883117,0.886425256729126
+G016_Q02,inferred,How do sick leave and carer's leave differ for casual workers?,1,0.47887323943661975,0.9249953627586365
+G016_Q02,inferred,How do sick leave and carer's leave differ for casual workers?,3,0.430379746835443,0.9395779967308044
+G016_Q02,inferred,How do sick leave and carer's leave differ for casual workers?,5,0.31578947368421056,0.8866990804672241
+G016_Q03,inferred,"If a casual employee is ill or needs to care for a family member, what leave can they access?",1,0.35714285714285715,0.9118237495422363
+G016_Q03,inferred,"If a casual employee is ill or needs to care for a family member, what leave can they access?",3,0.34210526315789475,0.8899546265602112
+G016_Q03,inferred,"If a casual employee is ill or needs to care for a family member, what leave can they access?",5,0.35897435897435903,0.889931321144104
+G017_Q01,inferred,What must an employer provide on a pay slip and how long must they keep employment records?,1,0.22857142857142854,0.8882462382316589
+G017_Q01,inferred,What must an employer provide on a pay slip and how long must they keep employment records?,3,0.2619047619047619,0.8990787267684937
+G017_Q01,inferred,What must an employer provide on a pay slip and how long must they keep employment records?,5,0.2777777777777778,0.8805945515632629
+G017_Q02,inferred,"What information should I expect on my pay slip, and how long are my employer's records kept?",1,0.25,0.9009335041046143
+G017_Q02,inferred,"What information should I expect on my pay slip, and how long are my employer's records kept?",3,0.16161616161616163,0.8672695159912109
+G017_Q02,inferred,"What information should I expect on my pay slip, and how long are my employer's records kept?",5,0.16666666666666666,0.8744685649871826
+G017_Q03,inferred,How soon should I get a pay slip and for how long does my employer have to keep wage records?,1,0.4,0.8975480794906616
+G017_Q03,inferred,How soon should I get a pay slip and for how long does my employer have to keep wage records?,3,0.5,0.9103336930274963
+G017_Q03,inferred,How soon should I get a pay slip and for how long does my employer have to keep wage records?,5,0.5,0.9103336930274963
+G018_Q01,inferred,"If I work interstate on a public holiday, which state's public holiday rules apply?",1,0.3478260869565218,0.9087415933609009
+G018_Q01,inferred,"If I work interstate on a public holiday, which state's public holiday rules apply?",3,0.1951219512195122,0.887715220451355
+G018_Q01,inferred,"If I work interstate on a public holiday, which state's public holiday rules apply?",5,0.1951219512195122,0.887715220451355
+G018_Q02,inferred,Which public holidays apply when an employee is working in a different state from where their job is based?,1,0.5063291139240507,0.9290856719017029
+G018_Q02,inferred,Which public holidays apply when an employee is working in a different state from where their job is based?,3,0.41860465116279066,0.9186979532241821
+G018_Q02,inferred,Which public holidays apply when an employee is working in a different state from where their job is based?,5,0.3098591549295775,0.9082765579223633
+G018_Q03,inferred,Does my entitlement to a public holiday depend on where I am working that day or where my job is based?,1,0.2903225806451613,0.9065154194831848
+G018_Q03,inferred,Does my entitlement to a public holiday depend on where I am working that day or where my job is based?,3,0.5161290322580646,0.9398520588874817
+G018_Q03,inferred,Does my entitlement to a public holiday depend on where I am working that day or where my job is based?,5,0.5573770491803278,0.9457545280456543
+G019_Q01,inferred,"How do resignation notice rules differ for casual employees and other employees, and when can pay be deducted for insufficient notice?",1,0.3015873015873016,0.8843730092048645
+G019_Q01,inferred,"How do resignation notice rules differ for casual employees and other employees, and when can pay be deducted for insufficient notice?",3,0.34074074074074073,0.9026625156402588
+G019_Q01,inferred,"How do resignation notice rules differ for casual employees and other employees, and when can pay be deducted for insufficient notice?",5,0.27972027972027974,0.8908280730247498
+G019_Q02,inferred,"What notice does a casual employee need to give compared with other employees, and what can happen if required notice is not given?",1,0.3770491803278688,0.8957991600036621
+G019_Q02,inferred,"What notice does a casual employee need to give compared with other employees, and what can happen if required notice is not given?",3,0.32812500000000006,0.8927419185638428
+G019_Q02,inferred,"What notice does a casual employee need to give compared with other employees, and what can happen if required notice is not given?",5,0.34532374100719426,0.8954466581344604
+G019_Q03,inferred,"Do casual employees need resignation notice, and when can an employer withhold wages for not giving enough notice?",1,0.2857142857142857,0.8832494616508484
+G019_Q03,inferred,"Do casual employees need resignation notice, and when can an employer withhold wages for not giving enough notice?",3,0.43137254901960786,0.906726062297821
+G019_Q03,inferred,"Do casual employees need resignation notice, and when can an employer withhold wages for not giving enough notice?",5,0.35036496350364965,0.8903005719184875
+G020_Q01,inferred,What happens to a junior casual's pay rate if they serve alcohol in a restaurant?,1,0.3636363636363636,0.903423547744751
+G020_Q01,inferred,What happens to a junior casual's pay rate if they serve alcohol in a restaurant?,3,0.3037974683544304,0.905010461807251
+G020_Q01,inferred,What happens to a junior casual's pay rate if they serve alcohol in a restaurant?,5,0.3571428571428571,0.9126458168029785
+G020_Q02,inferred,Can a junior employee covered by the Restaurant Award be paid the junior rate when serving alcohol?,1,0.39999999999999997,0.9152370691299438
+G020_Q02,inferred,Can a junior employee covered by the Restaurant Award be paid the junior rate when serving alcohol?,3,0.40506329113924044,0.9171029925346375
+G020_Q02,inferred,Can a junior employee covered by the Restaurant Award be paid the junior rate when serving alcohol?,5,0.35955056179775285,0.9035841822624207
+G020_Q03,inferred,How should a 17-year-old casual's pay be determined if their restaurant duties include serving alcohol?,1,0.3058823529411765,0.9006478190422058
+G020_Q03,inferred,How should a 17-year-old casual's pay be determined if their restaurant duties include serving alcohol?,3,0.2978723404255319,0.8944449424743652
+G020_Q03,inferred,How should a 17-year-old casual's pay be determined if their restaurant duties include serving alcohol?,5,0.31111111111111106,0.8985121846199036
+G021_Q01,inferred,How can casual loading and penalty rates be combined in a casual employee's pay?,1,0.3013698630136986,0.8906324505805969
+G021_Q01,inferred,How can casual loading and penalty rates be combined in a casual employee's pay?,3,0.3055555555555555,0.8900927305221558
+G021_Q01,inferred,How can casual loading and penalty rates be combined in a casual employee's pay?,5,0.30769230769230765,0.8792557120323181
+G021_Q02,inferred,Why might a casual employee's penalty rate already include casual loading?,1,0.27027027027027023,0.8843982815742493
+G021_Q02,inferred,Why might a casual employee's penalty rate already include casual loading?,3,0.27027027027027023,0.8843982815742493
+G021_Q02,inferred,Why might a casual employee's penalty rate already include casual loading?,5,0.29729729729729726,0.8856359720230103
+G021_Q03,inferred,How do casual loading and penalty rates interact under an award?,1,0.2580645161290323,0.8811089396476746
+G021_Q03,inferred,How do casual loading and penalty rates interact under an award?,3,0.22222222222222218,0.8836649060249329
+G021_Q03,inferred,How do casual loading and penalty rates interact under an award?,5,0.2424242424242424,0.8794323801994324
+G022_Q01,inferred,What can be included in an employee's final pay when employment ends with payment in lieu of notice?,1,0.21686746987951805,0.8700602054595947
+G022_Q01,inferred,What can be included in an employee's final pay when employment ends with payment in lieu of notice?,3,0.26373626373626374,0.8770521283149719
+G022_Q01,inferred,What can be included in an employee's final pay when employment ends with payment in lieu of notice?,5,0.26373626373626374,0.8770521283149719
+G022_Q02,inferred,"When someone leaves a job, how do final pay and payment in lieu of notice work together?",1,0.28571428571428575,0.8758237361907959
+G022_Q02,inferred,"When someone leaves a job, how do final pay and payment in lieu of notice work together?",3,0.5040650406504066,0.9098086953163147
+G022_Q02,inferred,"When someone leaves a job, how do final pay and payment in lieu of notice work together?",5,0.32432432432432434,0.891270101070404
+G022_Q03,inferred,What should an employee be paid when employment ends and the notice period is paid out?,1,0.13333333333333333,0.8574575185775757
+G022_Q03,inferred,What should an employee be paid when employment ends and the notice period is paid out?,3,0.32653061224489793,0.8930141925811768
+G022_Q03,inferred,What should an employee be paid when employment ends and the notice period is paid out?,5,0.29906542056074764,0.8907802104949951
