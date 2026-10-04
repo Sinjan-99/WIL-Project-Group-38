@@ -1,0 +1,7 @@
+question_type,k,rougeL,bertscore,judge_score
+inferred,1,0.318,0.895,3.958
+inferred,3,0.347,0.9,3.917
+inferred,5,0.322,0.893,4.208
+known,1,0.569,0.939,4.667
+known,3,0.596,0.942,4.933
+known,5,0.633,0.949,4.8

@@ -1,3 +1,5 @@
+import html
+
 import streamlit as st
 
 from src.retrieval.retrieval import (
@@ -9,6 +11,14 @@ from src.retrieval.retrieval import (
 )
 
 from src.generation.generation import generate_answer
+
+# generation.py may or may not define GenerationUnavailable depending on which
+# version is on the branch. Fall back to Exception so the app degrades either
+# way instead of failing at import time.
+try:
+    from src.generation.generation import GenerationUnavailable
+except ImportError:
+    GenerationUnavailable = Exception
 
 
 # --------------------------------------------------
@@ -35,21 +45,23 @@ def load_retrieval_model():
     return load_model()
 
 
+# A leading underscore tells Streamlit not to hash the argument. DataFrames
+# are unhashable, so without it the cache raises UnhashableParamError.
 @st.cache_resource
-def load_embeddings(df, _model):
-    return build_passage_embeddings(df, _model)
+def load_embeddings(_df, _model):
+    return build_passage_embeddings(_df, _model)
+
 
 @st.cache_resource
-def load_tfidf_index(df):
-    return build_tfidf_index(df)
+def load_tfidf_index(_df):
+    return build_tfidf_index(_df)
+
 
 df = load_data()
 model = load_retrieval_model()
 passage_embeddings = load_embeddings(df, model)
 tfidf_vectorizer, tfidf_embeddings = load_tfidf_index(df)
 
-# # CHANGE 8 
-import html
 
 # --------------------------------------------------
 # Session state
@@ -163,17 +175,35 @@ for turn_idx, turn in enumerate(st.session_state.turns):
         unsafe_allow_html=True
     )
 
+    show_sources = True
+
     with st.container(key=f"answer_card_{turn_idx}"):
-        if turn.get("unanswered"):
+
+        if turn.get("model_down"):
+            # Generation could not run at all. Show the top passage so the
+            # retrieval half is still usable, rather than a blank card.
+            st.warning(
+                "The local model isn't responding, so I'm showing the "
+                "retrieved passage instead. Check that Ollama is running."
+            )
+            if turn["results"]:
+                top = turn["results"][0]
+                st.write(top["text"])
+                st.caption(f"Source: {top['url']}")
+            show_sources = False
+
+        elif turn.get("unanswered"):
             st.warning(
                 "I found related pages but none of them answer that "
                 "question. Try the Fair Work Ombudsman website, or call "
                 "the Fair Work Infoline on 13 13 94."
             )
+            show_sources = False
+
         else:
             st.write(turn["answer"])
 
-        if turn["results"] and not turn.get("unanswered"):
+        if turn["results"] and show_sources:
             st.caption("Learn more")
             for rank, result in enumerate(turn["results"], start=1):
                 with st.expander(
@@ -212,24 +242,33 @@ if question and question.strip():
         or top_results[0]["score"] < CONFIDENCE_THRESHOLD
     )
 
+    answer = None
+    unanswered = False
+    model_down = False
+
     if low_confidence:
-        answer = None
         unanswered = True
     else:
-        answer = generate_answer(clean_question, top_results)
-        unanswered = any(
-            phrase in answer.lower() for phrase in FALLBACK_PHRASES
-        )
-        if unanswered:
-            answer = None
+        try:
+            answer = generate_answer(clean_question, top_results)
+        except GenerationUnavailable:
+            # Ollama is not running, or the model failed. Degrade to showing
+            # the retrieved passages rather than crashing with a traceback.
+            model_down = True
+
+        if not model_down:
+            unanswered = any(
+                phrase in str(answer).lower() for phrase in FALLBACK_PHRASES
+            )
+            if unanswered:
+                answer = None
 
     st.session_state.turns.append({
         "question": clean_question,
         "answer": answer,
         "results": top_results,
-        "unanswered": unanswered
+        "unanswered": unanswered,
+        "model_down": model_down
     })
 
     st.rerun()
-
-
